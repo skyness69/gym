@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../firebase';
 import { collection, query, orderBy, onSnapshot, limit } from 'firebase/firestore';
-import { Workout } from '../types';
+import type { Workout } from '../types';
 import { useAuth } from '../AuthContext';
 import { Plus, LogOut, History, TrendingUp, Calendar, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';

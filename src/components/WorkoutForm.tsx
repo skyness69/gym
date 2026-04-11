@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Plus, Trash2, Save } from 'lucide-react';
-import { Exercise } from '../types';
+import type { Exercise } from '../types';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '../AuthContext';
@@ -40,7 +40,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onClose, onSuccess }) => {
       const workoutData = {
         userId: user.uid,
         date: serverTimestamp(),
-        exercises: exercises.map((ex, idx) => ({ ...ex, id: crypto.randomUUID() })),
+        exercises: exercises.map((ex) => ({ ...ex, id: crypto.randomUUID() })),
         totalVolume: exercises.reduce((acc, ex) => acc + (Number(ex.weight || 0) * Number(ex.sets || 0) * Number(ex.reps || 0)), 0)
       };
 

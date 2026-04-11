@@ -36,30 +36,65 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-@layer components {
-  .glass-card {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl;
-  }
+/* Custom Utilities */
+@utility glass-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
 
-  .glass-button {
-    @apply px-4 py-2 rounded-xl transition-all duration-300 font-medium flex items-center justify-center gap-2;
-  }
+@utility glass-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.75rem;
+  transition: all 0.3s;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
 
-  .glass-button-primary {
-    @apply glass-button bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 hover:border-blue-500/50;
+@utility glass-button-primary {
+  @apply glass-button;
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  &:hover {
+    background-color: rgba(59, 130, 246, 0.3);
+    border-color: rgba(59, 130, 246, 0.5);
   }
+}
 
-  .glass-button-secondary {
-    @apply glass-button bg-white/5 text-gray-300 border border-white/10 hover:bg-white/10 hover:border-white/20;
+@utility glass-button-secondary {
+  @apply glass-button;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #d1d5db;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
   }
+}
 
-  .glass-input {
-    @apply w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white outline-none transition-all duration-300 focus:border-blue-500/50 focus:bg-white/10 placeholder:text-gray-500;
+@utility glass-input {
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: white;
+  outline: none;
+  transition: all 0.3s;
+  &:focus {
+    border-color: rgba(59, 130, 246, 0.5);
+    background-color: rgba(255, 255, 255, 0.1);
   }
+}
 
-  .neon-glow {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
-  }
+@utility neon-glow {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
 }
 
 .scrollbar-hide::-webkit-scrollbar {
