@@ -119,23 +119,14 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
             </div>
 
             <div className="space-y-6">
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-1">
-                  <input 
-                    type="number"
-                    className="w-full bg-transparent heading-athletic text-4xl text-white outline-none"
-                    value={set.weight || ''}
-                    onChange={e => handleUpdateSet(set.id, { weight: Number(e.target.value) })}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <input 
-                    type="number"
-                    className="w-full bg-transparent heading-athletic text-4xl text-white outline-none"
-                    value={set.reps || ''}
-                    onChange={e => handleUpdateSet(set.id, { reps: Number(e.target.value) })}
-                  />
-                </div>
+              <div className="flex flex-col items-center justify-center">
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-white/10 uppercase">MASS_KG</p>
+                <input 
+                  type="number"
+                  className="w-full bg-transparent heading-athletic text-8xl text-white outline-none text-center"
+                  value={set.weight || ''}
+                  onChange={e => handleUpdateSet(set.id, { weight: Number(e.target.value) })}
+                />
               </div>
             </div>
 
