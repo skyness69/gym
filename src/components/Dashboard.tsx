@@ -128,75 +128,75 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-6 md:p-12 lg:p-20 flex flex-col items-center">
-      <div className="w-full max-w-7xl animate-fade-in flex flex-col gap-10">
+    <div className="min-h-screen p-4 md:p-8 flex flex-col items-center overflow-x-hidden">
+      <div className="w-full max-w-6xl animate-fade-in flex flex-col gap-6 md:gap-8">
         
         {/* Navigation / Brand Header */}
-        <header className="flex items-center justify-between border-b border-white/5 pb-8">
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 bg-primary flex items-center justify-center">
-              <BarChart3 className="w-6 h-6 text-black" />
+        <header className="flex items-center justify-between border-b border-white/5 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 bg-primary flex items-center justify-center">
+              <BarChart3 className="w-5 h-5 text-black" />
             </div>
-            <h1 className="heading-athletic text-4xl tracking-tight text-white">PERFORMANCE <span className="text-white/40">CORE</span></h1>
+            <h1 className="heading-athletic text-2xl tracking-tight text-white">PERFORMANCE <span className="text-white/40">CORE</span></h1>
           </div>
           
-          <div className="flex items-center gap-6">
-            <div className="hidden md:flex items-center gap-3">
-              <span className="status-dot active" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary">LIVE ENGINE</span>
+          <div className="flex items-center gap-4">
+            <div className="hidden sm:flex items-center gap-2">
+              <span className="status-dot active w-1.5 h-1.5" />
+              <span className="text-[8px] font-black uppercase tracking-widest text-primary">LIVE ENGINE</span>
             </div>
             <button 
               onClick={() => auth.signOut()}
-              className="w-10 h-10 flex items-center justify-center text-white/20 hover:text-primary transition-colors"
+              className="w-8 h-8 flex items-center justify-center text-white/20 hover:text-primary transition-colors"
             >
-              <LogOut className="w-5 h-5" />
+              <LogOut className="w-4 h-4" />
             </button>
           </div>
         </header>
 
         {/* Dashboard Title & Actions */}
-        <section className="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
-          <div className="space-y-6">
-            <h2 className="heading-athletic text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-white leading-[0.8]">ACTIVE<br/>RETIREMENT</h2>
-            <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-              <div className="flex items-center gap-2 text-[10px] font-black text-white/10 tracking-[0.2em] uppercase">
-                <Timer className="w-4 h-4" />
+        <section className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div className="space-y-3">
+            <h2 className="heading-athletic text-5xl sm:text-6xl md:text-7xl text-white leading-[0.9]">ACTIVE_RETIREMENT</h2>
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              <div className="flex items-center gap-2 text-[8px] font-black text-white/10 tracking-[0.2em] uppercase">
+                <Timer className="w-3 h-3" />
                 DUR: 45M
               </div>
-              <div className="flex items-center gap-2 text-[10px] font-black text-white/10 tracking-[0.2em] uppercase">
-                <LayoutGrid className="w-4 h-4 text-primary/40" />
+              <div className="flex items-center gap-2 text-[8px] font-black text-white/10 tracking-[0.2em] uppercase">
+                <LayoutGrid className="w-3 h-3 text-primary/40" />
                 MODS: {days.length}
               </div>
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
+          <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
             <button 
               onClick={() => setIsAdding(true)}
-              className="btn-blaze w-full sm:w-auto"
+              className="btn-blaze w-full sm:w-auto whitespace-nowrap"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-3.5 h-3.5" />
               CREATE MODULE
             </button>
           </div>
         </section>
 
         {isAdding && (
-          <form onSubmit={handleAddDay} className="performance-card p-12 animate-slide-up">
-            <div className="flex flex-col md:flex-row items-end gap-10">
-              <div className="flex-1 space-y-4 w-full">
-                <label className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Module Title</label>
+          <form onSubmit={handleAddDay} className="performance-card p-6 animate-slide-up">
+            <div className="flex flex-col md:flex-row items-end gap-6">
+              <div className="flex-1 space-y-2 w-full">
+                <label className="text-[8px] font-black text-primary uppercase tracking-[0.3em]">Module Title</label>
                 <input 
-                  placeholder="E.G. MAXIMUM PUSH"
-                  className="input-performance text-4xl heading-athletic"
+                  placeholder="IDENTITY..."
+                  className="input-performance text-2xl heading-athletic"
                   value={newDayTitle}
                   onChange={e => setNewDayTitle(e.target.value)}
                   autoFocus
                 />
               </div>
-              <div className="flex gap-4 w-full md:w-auto">
-                <button type="button" onClick={() => setIsAdding(false)} className="btn-outline flex-1 md:w-40">CANCEL</button>
-                <button type="submit" disabled={actionLoading} className="btn-blaze flex-1 md:w-40">
+              <div className="flex gap-2 w-full md:w-auto">
+                <button type="button" onClick={() => setIsAdding(false)} className="btn-outline flex-1 md:w-32">CANCEL</button>
+                <button type="submit" disabled={actionLoading} className="btn-blaze flex-1 md:w-32">
                   {actionLoading ? 'PENDING...' : 'INITIATE'}
                 </button>
               </div>
@@ -205,32 +205,32 @@ const Dashboard: React.FC = () => {
         )}
 
         {/* Training Grid */}
-        <section className="mt-8">
+        <section className="mt-4">
           {days.length === 0 && !loading ? (
-            <div className="py-40 flex flex-col items-center justify-center performance-card bg-transparent border-dashed">
-              <div className="w-24 h-24 bg-white/5 flex items-center justify-center mb-10">
-                <Dumbbell className="w-10 h-10 text-white/20" />
+            <div className="py-20 flex flex-col items-center justify-center performance-card bg-transparent border-dashed">
+              <div className="w-16 h-16 bg-white/5 flex items-center justify-center mb-6">
+                <Dumbbell className="w-8 h-8 text-white/20" />
               </div>
-              <h3 className="heading-athletic text-4xl text-white/40 mb-10">NO MODULES DETECTED</h3>
-              <button onClick={handleAutoFillPPL} className="btn-blaze px-16">
-                AUTO-DECODE ELITE PPL
+              <h3 className="heading-athletic text-2xl text-white/40 mb-6">NOTHING DEPLOYED</h3>
+              <button onClick={handleAutoFillPPL} className="btn-blaze px-10">
+                DECODE PPL
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
               {loading ? (
                 Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="bg-surface h-80 animate-pulse performance-card" />
+                  <div key={i} className="bg-surface h-48 animate-pulse performance-card" />
                 ))
               ) : (
                 days.map((day) => (
-                  <div key={day.id} className="relative group animate-slide-up bg-surface p-12 overflow-hidden performance-card performance-card-hover" style={{ animationDelay: `${days.indexOf(day) * 50}ms` }}>
+                  <div key={day.id} className="relative group animate-slide-up bg-surface p-6 overflow-hidden performance-card performance-card-hover" style={{ animationDelay: `${days.indexOf(day) * 50}ms` }}>
                     <DayCard day={day} onClick={() => setSelectedDay(day)} />
                     <button 
                       onClick={(e) => handleDeleteDay(e, day.id)}
-                      className="absolute top-6 right-6 p-3 text-white/0 group-hover:text-white/20 hover:text-primary transition-all z-20"
+                      className="absolute top-4 right-4 p-2 text-white/0 group-hover:text-white/20 hover:text-primary transition-all z-20"
                     >
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 ))
