@@ -1,15 +1,28 @@
+export interface ExerciseSet {
+  id: string;
+  weight: number;
+  reps: number;
+  isCompleted: boolean;
+}
+
 export interface Exercise {
   id: string;
   name: string;
-  weight: number;
-  sets: number;
-  reps: number;
+  sets: ExerciseSet[];
 }
 
-export interface Workout {
+export interface WorkoutDay {
   id: string;
   userId: string;
-  date: any; // Firestore Timestamp
+  title: string;
+  exercises: Exercise[];
+  createdAt: any;
+}
+
+export interface WorkoutLog {
+  id: string;
+  userId: string;
+  date: any;
   exercises: Exercise[];
   totalVolume: number;
 }

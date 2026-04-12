@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { X, Plus, Trash2, Save } from 'lucide-react';
-import type { Exercise } from '../types';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '../AuthContext';
@@ -10,9 +9,16 @@ interface WorkoutFormProps {
   onSuccess: () => void;
 }
 
+interface FormExercise {
+  name: string;
+  weight: number;
+  sets: number;
+  reps: number;
+}
+
 const WorkoutForm: React.FC<WorkoutFormProps> = ({ onClose, onSuccess }) => {
   const { user } = useAuth();
-  const [exercises, setExercises] = useState<Partial<Exercise>[]>([
+  const [exercises, setExercises] = useState<FormExercise[]>([
     { name: '', weight: 0, sets: 0, reps: 0 }
   ]);
   const [loading, setLoading] = useState(false);
@@ -25,9 +31,9 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onClose, onSuccess }) => {
     setExercises(exercises.filter((_, i) => i !== index));
   };
 
-  const updateExercise = (index: number, field: keyof Exercise, value: string | number) => {
+  const updateExercise = (index: number, field: keyof FormExercise, value: string | number) => {
     const newExercises = [...exercises];
-    newExercises[index] = { ...newExercises[index], [field]: value };
+    newExercises[index] = { ...newExercises[index], [field]: value } as FormExercise;
     setExercises(newExercises);
   };
 
@@ -40,7 +46,16 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onClose, onSuccess }) => {
       const workoutData = {
         userId: user.uid,
         date: serverTimestamp(),
-        exercises: exercises.map((ex) => ({ ...ex, id: crypto.randomUUID() })),
+        exercises: exercises.map((ex) => ({
+          id: crypto.randomUUID(),
+          name: ex.name,
+          sets: Array.from({ length: ex.sets || 0 }).map(() => ({
+            id: crypto.randomUUID(),
+            weight: Number(ex.weight || 0),
+            reps: Number(ex.reps || 0),
+            isCompleted: true
+          }))
+        })),
         totalVolume: exercises.reduce((acc, ex) => acc + (Number(ex.weight || 0) * Number(ex.sets || 0) * Number(ex.reps || 0)), 0)
       };
 
@@ -147,7 +162,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onClose, onSuccess }) => {
           >
             {loading ? 'Saving...' : (
               <>
-                <Save className="w-5 h-5" />
+                <Save className="w-5 h-5 mr-2" />
                 Complete Workout
               </>
             )}

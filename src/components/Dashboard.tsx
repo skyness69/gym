@@ -1,166 +1,246 @@
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../firebase';
-import { collection, query, orderBy, onSnapshot, limit } from 'firebase/firestore';
-import type { Workout } from '../types';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeBatch, doc } from 'firebase/firestore';
+import type { WorkoutDay } from '../types';
 import { useAuth } from '../AuthContext';
-import { Plus, LogOut, History, TrendingUp, Calendar, ArrowRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Plus, LogOut, Layers, Sparkles, Dumbbell, ArrowRight, ClipboardCheck } from 'lucide-react';
+import DayCard from './DayCard';
+import DayDetail from './DayDetail';
 import WorkoutForm from './WorkoutForm';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
-  const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const [showForm, setShowForm] = useState(false);
+  const [days, setDays] = useState<WorkoutDay[]>([]);
+  const [selectedDay, setSelectedDay] = useState<WorkoutDay | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
+  const [isLogging, setIsLogging] = useState(false);
+  const [newDayTitle, setNewDayTitle] = useState('');
+  const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
     if (!user) return;
 
     const q = query(
-      collection(db, `users/${user.uid}/workouts`),
-      orderBy('date', 'desc'),
-      limit(10)
+      collection(db, `users/${user.uid}/workout_days`),
+      orderBy('createdAt', 'desc')
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const workoutData = snapshot.docs.map(doc => ({
+      const dayData = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
-      })) as Workout[];
-      setWorkouts(workoutData);
+      })) as WorkoutDay[];
+      setDays(dayData);
       setLoading(false);
     });
 
     return unsubscribe;
   }, [user]);
 
-  const totalSessions = workouts.length;
-  const totalVolume = workouts.reduce((acc, w) => acc + (w.totalVolume || 0), 0);
+  const handleAddDay = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || !newDayTitle.trim()) return;
+
+    setActionLoading(true);
+    try {
+      await addDoc(collection(db, `users/${user.uid}/workout_days`), {
+        userId: user.uid,
+        title: newDayTitle,
+        exercises: [],
+        createdAt: serverTimestamp()
+      });
+      setNewDayTitle('');
+      setIsAdding(false);
+    } catch (error) {
+      console.error("Error adding day:", error);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const handleAutoFillPPL = async () => {
+    if (!user) return;
+    setActionLoading(true);
+    try {
+      const batch = writeBatch(db);
+      
+      const createSets = (count: number, weight: number, reps: number) => 
+        Array.from({ length: count }).map(() => ({
+          id: crypto.randomUUID(),
+          weight,
+          reps,
+          isCompleted: false
+        }));
+
+      const ppl = [
+        {
+          title: 'Push Day',
+          exercises: [
+            { id: crypto.randomUUID(), name: 'Bench Press', sets: createSets(3, 60, 10) },
+            { id: crypto.randomUUID(), name: 'Overhead Press', sets: createSets(3, 40, 10) },
+            { id: crypto.randomUUID(), name: 'Lateral Raises', sets: createSets(3, 8, 12) },
+          ]
+        },
+        {
+          title: 'Pull Day',
+          exercises: [
+            { id: crypto.randomUUID(), name: 'Pull-ups', sets: createSets(3, 0, 10) },
+            { id: crypto.randomUUID(), name: 'Barbell Rows', sets: createSets(3, 50, 10) },
+            { id: crypto.randomUUID(), name: 'Bicep Curls', sets: createSets(3, 12, 12) },
+          ]
+        },
+        {
+          title: 'Leg Day',
+          exercises: [
+            { id: crypto.randomUUID(), name: 'Squats', sets: createSets(3, 70, 8) },
+            { id: crypto.randomUUID(), name: 'Leg Press', sets: createSets(3, 120, 10) },
+            { id: crypto.randomUUID(), name: 'Calf Raises', sets: createSets(3, 40, 15) },
+          ]
+        }
+      ];
+
+      ppl.forEach(day => {
+        const docRef = doc(collection(db, `users/${user.uid}/workout_days`));
+        batch.set(docRef, {
+          ...day,
+          userId: user.uid,
+          createdAt: serverTimestamp()
+        });
+      });
+
+      await batch.commit();
+    } catch (error) {
+      console.error("Auto-fill error:", error);
+    } finally {
+      setActionLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-background text-white p-4 md:p-8 bg-glow-gradient">
-      {/* Header */}
-      <header className="max-w-6xl mx-auto mb-10 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-xl shadow-lg neon-glow">G</div>
-          <h1 className="text-2xl font-bold tracking-tight hidden sm:block">Gym Log Track</h1>
+    <div className="min-h-screen p-4 md:p-8 animate-fade-in relative z-10">
+      {/* Background Decor */}
+      <div className="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full" />
+      </div>
+
+      <header className="max-w-5xl mx-auto mb-12 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.3)]">
+            <Dumbbell className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">Gym Log Track</h1>
+            <div className="premium-badge mt-1">Status: Active</div>
+          </div>
         </div>
         
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:flex flex-col items-end">
-            <span className="text-sm font-medium">{user?.displayName || 'Athlete'}</span>
-            <span className="text-xs text-gray-400">{user?.email}</span>
-          </div>
-          <button 
-            onClick={() => auth.signOut()}
-            className="p-3 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors"
-          >
-            <LogOut className="w-5 h-5 text-gray-400" />
-          </button>
-        </div>
+        <button 
+          onClick={() => auth.signOut()}
+          className="glass-button-secondary py-2.5 px-3"
+        >
+          <LogOut className="w-5 h-5 opacity-70" />
+        </button>
       </header>
 
-      <main className="max-w-6xl mx-auto space-y-10">
-        {/* Stats Grid */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="glass-card p-6 flex items-start justify-between group cursor-default">
+      <main className="max-w-5xl mx-auto space-y-12">
+        <section className="space-y-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-2">
             <div>
-              <p className="text-gray-400 text-sm font-medium mb-1">Total Sessions</p>
-              <h3 className="text-3xl font-bold">{totalSessions}</h3>
+              <h2 className="text-xl font-semibold flex items-center gap-3">
+                <Layers className="w-5 h-5 text-blue-400" />
+                Training Architecture
+              </h2>
+              <p className="text-sm text-white/40 mt-1">Select a program to begin your session</p>
             </div>
-            <div className="p-3 bg-blue-600/10 rounded-xl border border-blue-500/20 group-hover:bg-blue-600/20 transition-colors">
-              <History className="w-6 h-6 text-blue-400" />
-            </div>
-          </div>
-          
-          <div className="glass-card p-6 flex items-start justify-between group cursor-default">
-            <div>
-              <p className="text-gray-400 text-sm font-medium mb-1">Total Volume</p>
-              <h3 className="text-3xl font-bold">{(totalVolume / 1000).toFixed(1)} <span className="text-sm font-normal text-gray-500">tons</span></h3>
-            </div>
-            <div className="p-3 bg-green-600/10 rounded-xl border border-green-500/20 group-hover:bg-green-600/20 transition-colors">
-              <TrendingUp className="w-6 h-6 text-green-400" />
+            
+            <div className="flex flex-wrap items-center gap-3">
+              {days.length === 0 && (
+                <button 
+                  onClick={handleAutoFillPPL}
+                  disabled={actionLoading}
+                  className="glass-button-secondary py-2.5 px-5 bg-white/5 border-dashed border-white/20"
+                >
+                  <Sparkles className="w-4 h-4 text-blue-400" />
+                  Starter PPL Template
+                </button>
+              )}
+              <button 
+                onClick={() => setIsLogging(true)}
+                className="glass-button-secondary py-2.5 px-6 border-white/10"
+              >
+                <ClipboardCheck className="w-4 h-4 text-green-400" />
+                Log Session
+              </button>
+              <button 
+                onClick={() => setIsAdding(true)}
+                className="glass-button-primary py-2.5 px-6"
+              >
+                <Plus className="w-4 h-4 ml-[-4px]" />
+                New Routine
+              </button>
             </div>
           </div>
 
-          <div className="glass-card p-6 flex items-center justify-center">
-            <button 
-              onClick={() => setShowForm(true)}
-              className="w-full glass-button-primary py-4 text-lg animate-pulse hover:animate-none"
-            >
-              <Plus className="w-6 h-6" />
-              Log New Workout
-            </button>
-          </div>
-        </section>
-
-        {/* Recent History */}
-        <section className="space-y-6">
-          <div className="flex items-center justify-between px-2">
-            <h2 className="text-xl font-semibold flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-blue-400" />
-              Recent Activities
-            </h2>
-            <button className="text-sm text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors">
-              View All <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+          {isAdding && (
+            <form onSubmit={handleAddDay} className="glass-card p-8 animate-slide-up space-y-5 border-blue-500/20 bg-blue-500/5">
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase tracking-widest text-blue-400 ml-1">Routine Identity</label>
+                <input 
+                  placeholder="Enter day title (e.g. Upper Body Elite)"
+                  className="glass-input"
+                  value={newDayTitle}
+                  onChange={e => setNewDayTitle(e.target.value)}
+                  autoFocus
+                />
+              </div>
+              <div className="flex gap-4">
+                <button type="button" onClick={() => setIsAdding(false)} className="glass-button-secondary flex-1">Minimize</button>
+                <button type="submit" disabled={actionLoading} className="glass-button-primary flex-1">
+                  {actionLoading ? 'Allocating...' : 'Initialize Routine'}
+                </button>
+              </div>
+            </form>
+          )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {loading ? (
-              <div className="col-span-full h-40 flex items-center justify-center text-gray-500">Loading workouts...</div>
-            ) : workouts.length === 0 ? (
-              <div className="col-span-full h-40 flex flex-col items-center justify-center glass-card border-dashed">
-                <p className="text-gray-400">No workouts logged yet.</p>
-                <button onClick={() => setShowForm(true)} className="text-blue-400 hover:underline mt-2">Start your first session</button>
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="glass-card h-32 animate-pulse" />
+              ))
+            ) : days.length === 0 ? (
+              <div className="col-span-full py-20 flex flex-col items-center justify-center glass-card border-dashed bg-white/[0.01]">
+                <div className="w-16 h-16 rounded-3xl bg-white/5 flex items-center justify-center mb-6">
+                  <ArrowRight className="w-8 h-8 text-white/20" />
+                </div>
+                <h3 className="text-lg font-medium text-white/60">No training modules found</h3>
+                <p className="text-sm text-white/30 mt-2 max-w-xs text-center px-4">Initialize your workout structure by creating a routine or starting with our pro template.</p>
+                <button onClick={handleAutoFillPPL} className="mt-8 text-blue-400 font-medium hover:text-blue-300 transition-colors flex items-center gap-2">
+                  <Sparkles className="w-4 h-4" />
+                  Apply Starter Template
+                </button>
               </div>
             ) : (
-            <AnimatePresence>
-              {workouts.map((workout, index) => (
-                <motion.div 
-                  key={workout.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="glass-card p-6 hover:border-white/20 transition-all cursor-default"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-semibold px-3 py-1 bg-blue-600/20 text-blue-400 rounded-full border border-blue-500/30">
-                      {workout.date ? workout.date.toDate().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Just now'}
-                    </span>
-                    <span className="text-sm text-gray-400">{workout.exercises.length} Exercises</span>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    {workout.exercises.map((ex) => (
-                      <div key={ex.id} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
-                        <span className="font-medium">{ex.name}</span>
-                        <div className="flex gap-4 text-sm text-gray-400">
-                          <span>{ex.weight}kg</span>
-                          <span>{ex.sets}x{ex.reps}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-gray-500">
-                    <span>Total Volume: {workout.totalVolume} kg</span>
-                    <span>{workout.date ? workout.date.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Processing...'}</span>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
+              days.map((day) => (
+                <DayCard key={day.id} day={day} onClick={() => setSelectedDay(day)} />
+              ))
             )}
           </div>
         </section>
       </main>
 
-      {showForm && (
+      {selectedDay && (
+        <DayDetail day={selectedDay} onClose={() => setSelectedDay(null)} />
+      )}
+
+      {isLogging && (
         <WorkoutForm 
-          onClose={() => setShowForm(false)} 
+          onClose={() => setIsLogging(false)} 
           onSuccess={() => {
-            // Firestore onSnapshot handles live update
-          }}
+            setIsLogging(false);
+            // Could add a toast here
+          }} 
         />
       )}
     </div>
