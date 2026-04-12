@@ -47,10 +47,10 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onClose, onSuccess }) => {
         userId: user.uid,
         date: serverTimestamp(),
         exercises: exercises.map((ex) => ({
-          id: crypto.randomUUID(),
+          id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11),
           name: ex.name,
           sets: Array.from({ length: ex.sets || 0 }).map(() => ({
-            id: crypto.randomUUID(),
+            id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11),
             weight: Number(ex.weight || 0),
             reps: Number(ex.reps || 0),
             isCompleted: true
