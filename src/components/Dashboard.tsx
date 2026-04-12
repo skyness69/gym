@@ -239,7 +239,7 @@ const Dashboard: React.FC = () => {
                   <DayCard day={day} onClick={() => setSelectedDay(day)} />
                   <button 
                     onClick={(e) => handleDeleteDay(e, day.id)}
-                    className="absolute top-4 right-14 p-2 rounded-xl bg-red-500/5 text-red-500/0 group-hover:text-red-500/40 hover:text-red-400 transition-all z-20"
+                    className="absolute top-4 right-14 p-2 rounded-xl bg-red-500/5 text-red-500/20 group-hover:text-red-500/60 hover:text-red-400 hover:bg-red-500/10 transition-all z-20 flex items-center justify-center border border-transparent hover:border-red-500/20"
                     title="Delete Routine"
                   >
                     <Trash2 className="w-4 h-4" />
