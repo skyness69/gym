@@ -121,7 +121,6 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
             <div className="space-y-6">
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-1">
-                  <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/5">MASS_KG</p>
                   <input 
                     type="number"
                     className="w-full bg-transparent heading-athletic text-4xl text-white outline-none"
@@ -130,7 +129,6 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
                   />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/5">FREQ_REPS</p>
                   <input 
                     type="number"
                     className="w-full bg-transparent heading-athletic text-4xl text-white outline-none"
