@@ -47,13 +47,13 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
 
   return (
     <div className="space-y-12 group relative">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 border-l-2 border-l-white/10 hover:border-l-primary transition-all duration-700 pl-8 md:pl-16">
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-10 border-l-2 border-l-white/10 hover:border-l-primary transition-all duration-700 pl-6 md:pl-16">
         
-        <div className="flex-1 space-y-8">
+        <div className="flex-1 space-y-6 md:space-y-8">
           <div className="flex items-center gap-6">
              {isEditingName ? (
                 <input 
-                  className="bg-transparent border-0 border-b-2 border-primary outline-none text-5xl md:text-7xl heading-athletic text-white w-full"
+                  className="bg-transparent border-0 border-b-2 border-primary outline-none text-4xl sm:text-5xl md:text-7xl heading-athletic text-white w-full"
                   value={localName}
                   onChange={e => setLocalName(e.target.value)}
                   onBlur={handleNameSave}
@@ -63,32 +63,32 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
               ) : (
                 <h4 
                   onClick={() => setIsEditingName(true)}
-                  className="text-5xl md:text-7xl heading-athletic text-white/90 group-hover:text-white cursor-text transition-colors"
+                  className="text-4xl sm:text-5xl md:text-7xl heading-athletic text-white/90 group-hover:text-white cursor-text transition-colors leading-[0.85]"
                 >
                   {exercise.name}
                 </h4>
               )}
           </div>
 
-          <div className="flex flex-wrap items-center gap-x-16 gap-y-8">
-            <div className="space-y-3">
-               <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">PROGRESS TELEMETRY</p>
+          <div className="flex flex-wrap items-center gap-x-12 gap-y-6">
+            <div className="space-y-2">
+               <p className="text-[8px] font-black uppercase tracking-[0.4em] text-white/10">TELEMETRY_SYNC</p>
                <div className="flex items-center gap-4">
-                 <div className="h-0.5 w-40 bg-white/5 overflow-hidden">
+                 <div className="h-[2px] w-24 sm:w-40 bg-white/5 overflow-hidden">
                     <div 
                       className="h-full bg-primary transition-all duration-1000" 
                       style={{ width: `${progressPercent}%` }} 
                     />
                  </div>
-                 <span className="mono-data text-xl font-black text-primary">{completedSets} / {totalSets}</span>
+                 <span className="mono-data text-base font-black text-primary">{completedSets}/{totalSets}</span>
                </div>
             </div>
 
-            <div className="space-y-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.4em] text-white/20">MODULE TYPE</p>
+            <div className="space-y-2">
+              <p className="text-[8px] font-black uppercase tracking-[0.4em] text-white/10">ACTIVE_SPEC</p>
               <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4 text-primary" />
-                <span className="heading-athletic text-2xl text-white">HARDCORE_STRENGTH_V3</span>
+                <Activity className="w-3 h-3 text-primary" />
+                <span className="heading-athletic text-xl text-white">CORE_V3</span>
               </div>
             </div>
           </div>
@@ -96,7 +96,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
 
         <button 
           onClick={onRemove}
-          className="w-14 h-14 border border-white/10 flex items-center justify-center text-white/10 hover:text-primary hover:bg-primary/5 hover:border-primary transition-all rounded-sm md:mb-1"
+          className="w-12 h-12 border border-white/10 flex items-center justify-center text-white/10 hover:text-primary hover:bg-primary/5 hover:border-primary transition-all rounded-sm"
         >
           <Trash2 className="w-5 h-5" />
         </button>

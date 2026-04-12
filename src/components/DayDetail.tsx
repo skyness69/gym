@@ -62,55 +62,56 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
     <div className="fixed inset-0 z-[100] bg-background flex flex-col overflow-hidden animate-fade-in font-['Inter']">
       
       {/* High-Performance Navbar */}
-      <header className="px-12 py-12 md:px-20 border-b border-white/5 flex items-center justify-between bg-surface relative z-10">
-        <div className="flex items-center gap-12">
-          <button 
-            onClick={onClose} 
-            className="w-14 h-14 bg-white/5 flex items-center justify-center text-white/40 hover:text-primary transition-all rounded-sm border border-white/5 hover:border-primary"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-          
-          <div className="space-y-4">
-            <h2 className="heading-athletic text-8xl md:text-9xl text-white leading-none">{day.title}</h2>
-            <div className="flex items-center gap-8">
-              <div className="flex items-center gap-3">
-                <span className="status-dot active" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">LIVE PERFORMANCE LOG</span>
-              </div>
-              <div className="w-[1px] h-3 bg-white/10" />
-              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20">
-                MODULE: <span className="text-white mono-data">{day.id.substring(0, 10)}</span>
+      <header className="px-6 py-8 md:px-20 md:py-12 border-b border-white/5 bg-surface relative z-10">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-8">
+          <div className="flex items-start md:items-center gap-6 md:gap-12">
+            <button 
+              onClick={onClose} 
+              className="w-12 h-12 md:w-14 md:h-14 bg-white/5 flex items-center justify-center text-white/40 hover:text-primary transition-all rounded-sm border border-white/5 hover:border-primary shrink-0 mt-1 md:mt-0"
+            >
+              <ChevronLeft className="w-5 h-5 md:w-6 md:h-6" />
+            </button>
+            
+            <div className="space-y-2 md:space-y-4">
+              <h2 className="heading-athletic text-6xl md:text-9xl text-white leading-[0.8]">{day.title}</h2>
+              <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                <div className="flex items-center gap-2">
+                  <span className="status-dot active" />
+                  <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">LIVE ENGINE</span>
+                </div>
+                <div className="hidden sm:block w-[1px] h-3 bg-white/10" />
+                <div className="text-[9px] font-black uppercase tracking-[0.2em] text-white/20">
+                  REF: <span className="text-white mono-data">{day.id.substring(0, 6)}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex items-center gap-12">
-          <div className="hidden lg:flex flex-col items-end gap-2">
-            {isSyncing ? (
-              <span className="text-primary text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
-                <Activity className="w-3 h-3 animate-spin" /> ENCRYPTING TELEMETRY
-              </span>
-            ) : (
-              <span className="text-white/20 text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
-                <CloudCheck className="w-3 h-3 text-primary/40" /> CLUSTER SYNCED
-              </span>
-            )}
-            <div className="text-[8px] font-black text-white/5 tracking-[0.5em] uppercase">Security Verified: SSL_V2</div>
+          <div className="flex items-center justify-between md:justify-end gap-8 border-t border-white/5 pt-6 md:border-0 md:pt-0">
+            <div className="flex flex-col items-start md:items-end gap-1">
+              {isSyncing ? (
+                <span className="text-primary text-[8px] font-black uppercase tracking-widest flex items-center gap-2">
+                   ENCRYPTING...
+                </span>
+              ) : (
+                <span className="text-white/10 text-[8px] font-black uppercase tracking-widest flex items-center gap-2">
+                   SYNCED
+                </span>
+              )}
+            </div>
+            
+            <button 
+              onClick={onClose}
+              className="btn-blaze px-8 h-12 md:px-16 md:h-14 text-[10px]"
+            >
+              EXIT SESSION
+            </button>
           </div>
-          
-          <button 
-            onClick={onClose}
-            className="btn-blaze px-16 h-14"
-          >
-            COMPLETE SESSION
-          </button>
         </div>
       </header>
 
       {/* Deployment Floor */}
-      <main className="flex-1 overflow-y-auto p-12 md:p-20 space-y-20 max-w-7xl mx-auto w-full scrollbar-hide relative z-10">
+      <main className="flex-1 overflow-y-auto p-6 md:p-20 space-y-12 md:space-y-20 max-w-7xl mx-auto w-full scrollbar-hide relative z-10">
         <div className="flex flex-col gap-1 w-full bg-white/5">
           {exercises.length === 0 ? (
             <div className="py-60 flex flex-col items-center justify-center bg-surface">

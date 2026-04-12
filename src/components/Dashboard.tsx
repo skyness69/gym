@@ -155,25 +155,25 @@ const Dashboard: React.FC = () => {
         </header>
 
         {/* Dashboard Title & Actions */}
-        <section className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-          <div className="space-y-4">
-            <h2 className="heading-athletic text-7xl md:text-8xl lg:text-9xl text-white">ACTIVE<br/>RETIREMENT</h2>
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2 text-xs font-bold text-white/20 tracking-widest uppercase">
+        <section className="flex flex-col lg:flex-row lg:items-end justify-between gap-12">
+          <div className="space-y-6">
+            <h2 className="heading-athletic text-6xl sm:text-7xl md:text-8xl lg:text-9xl text-white leading-[0.8]">ACTIVE<br/>RETIREMENT</h2>
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
+              <div className="flex items-center gap-2 text-[10px] font-black text-white/10 tracking-[0.2em] uppercase">
                 <Timer className="w-4 h-4" />
-                Session duration: 45m
+                DUR: 45M
               </div>
-              <div className="flex items-center gap-2 text-xs font-bold text-white/20 tracking-widest uppercase">
-                <LayoutGrid className="w-4 h-4 text-primary" />
-                Active modules: {days.length}
+              <div className="flex items-center gap-2 text-[10px] font-black text-white/10 tracking-[0.2em] uppercase">
+                <LayoutGrid className="w-4 h-4 text-primary/40" />
+                MODS: {days.length}
               </div>
             </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto">
             <button 
               onClick={() => setIsAdding(true)}
-              className="btn-blaze"
+              className="btn-blaze w-full sm:w-auto"
             >
               <Plus className="w-4 h-4" />
               CREATE MODULE
