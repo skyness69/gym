@@ -30,7 +30,7 @@ const Auth: React.FC = () => {
             <div className="w-10 h-10 bg-primary flex items-center justify-center">
                <BarChart3 className="w-6 h-6 text-black" />
             </div>
-            <span className="heading-athletic text-2xl text-white">IRON_TRACKER</span>
+            <span className="heading-athletic text-3xl text-white tracking-widest">RAW</span>
           </div>
 
           <div className="space-y-2">
