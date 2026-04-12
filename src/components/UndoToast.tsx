@@ -14,7 +14,7 @@ const UndoToast: React.FC<UndoToastProps> = ({ message, onUndo, onClose }) => {
   }, [onClose]);
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] animate-slide-up flex items-center justify-between gap-6 bg-[#101114] border border-white/10 px-6 py-4 shadow-[0_0_20px_rgba(255,63,0,0.15)] rounded-sm min-w-[320px]">
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] animate-slide-up flex items-center justify-between gap-6 bg-[#101114] border border-white/10 px-6 py-4 shadow-[0_0_20px_rgba(138,187,108,0.15)] rounded-sm min-w-[320px]">
       <span className="text-[10px] font-black uppercase tracking-widest text-white/60">{message}</span>
       <div className="flex items-center gap-4">
         <button 

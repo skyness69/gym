@@ -4,8 +4,8 @@
 @theme {
   --color-background: #0c0c0e;
   --color-surface: #161618;
-  --color-primary: #ff5f1f; /* Blaze Orange */
-  --color-primary-glow: rgba(255, 95, 31, 0.4);
+  --color-primary: #8ABB6C; /* Sage Green */
+  --color-primary-glow: rgba(138, 187, 108, 0.4);
   --color-accent: #ffffff;
 }
 
@@ -39,7 +39,7 @@ body {
 /* Sharp Performance Cards */
 @utility performance-card {
   background: var(--color-surface);
-  border: 1px solid rgba(255, 63, 0, 0.05);
+  border: 1px solid rgba(138, 187, 108, 0.05);
   border-radius: 1px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -47,10 +47,15 @@ body {
 
 @utility performance-card-hover {
   &:hover {
-    border-color: rgba(255, 63, 0, 0.3);
-    box-shadow: 0 0 25px rgba(255, 63, 0, 0.08);
+    border-color: rgba(138, 187, 108, 0.3);
+    box-shadow: 0 0 25px rgba(138, 187, 108, 0.08);
     transform: translateY(-1px);
   }
+}
+
+@utility performance-card-completed {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 40px rgba(138, 187, 108, 0.12);
 }
 
 @utility btn-blaze {
@@ -60,7 +65,7 @@ body {
   font-family: 'Inter', sans-serif;
   font-weight: 900;
   font-size: 0.7rem;
-  box-shadow: 0 0 15px rgba(255, 63, 0, 0.2);
+  box-shadow: 0 0 15px rgba(138, 187, 108, 0.2);
   
   &:hover:not(:disabled) {
     background: #ffffff;
@@ -84,7 +89,7 @@ body {
   &:hover {
     border-color: var(--color-primary);
     color: var(--color-primary);
-    background: rgba(255, 63, 0, 0.02);
+    background: rgba(138, 187, 108, 0.02);
   }
 }
 
@@ -93,7 +98,7 @@ body {
   &:focus {
     border-color: var(--color-primary);
     background: #0f1012;
-    box-shadow: inset 0 -4px 10px rgba(255, 63, 0, 0.02);
+    box-shadow: inset 0 -4px 10px rgba(138, 187, 108, 0.02);
   }
 }
 

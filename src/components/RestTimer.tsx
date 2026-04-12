@@ -43,7 +43,7 @@ const RestTimer: React.FC<RestTimerProps> = ({ duration, onClose }) => {
               cy="40"
               r="36"
               fill="transparent"
-              stroke="#ff5f1f"
+              stroke="#8ABB6C"
               strokeWidth="4"
               strokeDasharray={226}
               strokeDashoffset={226 - (226 * percentage) / 100}

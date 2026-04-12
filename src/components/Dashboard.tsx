@@ -231,17 +231,27 @@ const Dashboard: React.FC = () => {
                   <div key={i} className="bg-surface h-48 animate-pulse performance-card" />
                 ))
               ) : (
-                days.map((day) => (
-                  <div key={day.id} className="relative group animate-slide-up bg-surface p-6 overflow-hidden performance-card performance-card-hover" style={{ animationDelay: `${days.indexOf(day) * 50}ms` }}>
-                    <DayCard day={day} onClick={() => setSelectedDay(day)} />
-                    <button 
-                      onClick={(e) => handleDeleteDay(e, day)}
-                      className="absolute top-3 right-3 p-2 text-white/20 hover:text-red-500 hover:bg-red-500/10 transition-all z-20 rounded-sm"
+                days.map((day) => {
+                  const isCompleted = day.exercises?.length > 0 && day.exercises.every(ex => 
+                    ex.sets?.length > 0 && ex.sets.every(s => s.isCompleted)
+                  );
+                  
+                  return (
+                    <div 
+                      key={day.id} 
+                      className={`relative group animate-slide-up bg-surface p-6 overflow-hidden performance-card performance-card-hover ${isCompleted ? 'performance-card-completed' : ''}`} 
+                      style={{ animationDelay: `${days.indexOf(day) * 50}ms` }}
                     >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))
+                      <DayCard day={day} onClick={() => setSelectedDay(day)} />
+                      <button 
+                        onClick={(e) => handleDeleteDay(e, day)}
+                        className="absolute top-3 right-3 p-2 text-white/20 hover:text-red-500 hover:bg-red-500/10 transition-all z-20 rounded-sm"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  );
+                })
               )}
             </div>
           )}

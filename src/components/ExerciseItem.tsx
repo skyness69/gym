@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Exercise, ExerciseSet } from '../types';
-import { Trash2, Plus, Circle, CheckCircle2, Activity, RotateCcw } from 'lucide-react';
+import { Trash2, Plus, Circle, CheckCircle2, Activity, RotateCcw, Trophy } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useToast } from '../ToastContext';
 
 interface ExerciseItemProps {
@@ -95,15 +96,27 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
 
           <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
             <div className="space-y-2">
-               <p className="text-[7px] font-black uppercase tracking-[0.3em] text-white/30 italic">VOLUME_PROGRESS</p>
+               <div className="flex items-center gap-3">
+                 <p className="text-[7px] font-black uppercase tracking-[0.3em] text-white/30 italic">VOLUME_PROGRESS</p>
+                 {progressPercent === 100 && totalSets > 0 && (
+                   <motion.div 
+                     initial={{ scale: 0, x: -10 }}
+                     animate={{ scale: 1, x: 0 }}
+                     className="flex items-center gap-1 px-1.5 py-0.5 bg-primary/10 border border-primary/20 rounded-sm"
+                   >
+                     <Trophy className="w-2 h-2 text-primary" />
+                     <span className="text-[6px] font-black text-primary tracking-tighter">PERFECT_EXECUTION</span>
+                   </motion.div>
+                 )}
+               </div>
                <div className="flex items-center gap-3">
                  <div className="h-[2px] w-24 sm:w-40 bg-white/5 overflow-hidden rounded-full">
                     <div 
-                      className="h-full bg-primary shadow-[0_0_8px_rgba(255,63,0,0.5)] transition-all duration-1000" 
+                      className="h-full bg-primary shadow-[0_0_8px_rgba(138,187,108,0.5)] transition-all duration-1000" 
                       style={{ width: `${progressPercent}%` }} 
                     />
                  </div>
-                 <span className="mono-data text-[10px] font-black text-primary drop-shadow-[0_0_5px_rgba(255,63,0,0.3)]">{completedSets}/{totalSets}</span>
+                 <span className="mono-data text-[10px] font-black text-primary drop-shadow-[0_0_5px_rgba(138,187,108,0.3)]">{completedSets}/{totalSets}</span>
                </div>
             </div>
 
@@ -161,7 +174,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
                 </button>
                 <button 
                   onClick={() => handleUpdateSet(set.id, { isCompleted: !set.isCompleted })}
-                  className={`w-7 h-7 flex items-center justify-center transition-all border ${set.isCompleted ? 'bg-primary border-primary text-black shadow-[0_0_10px_rgba(255,63,0,0.4)]' : 'bg-white/5 border-white/5 text-white/10 hover:border-primary/50'}`}
+                  className={`w-7 h-7 flex items-center justify-center transition-all border ${set.isCompleted ? 'bg-primary border-primary text-black shadow-[0_0_10px_rgba(138,187,108,0.4)]' : 'bg-white/5 border-white/5 text-white/10 hover:border-primary/50'}`}
                 >
                   {set.isCompleted ? <CheckCircle2 className="w-4 h-4" /> : <Circle className="w-4 h-4" />}
                 </button>

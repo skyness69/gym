@@ -1,6 +1,6 @@
 import React from 'react';
 import type { WorkoutDay } from '../types';
-import { ArrowRight, Hash } from 'lucide-react';
+import { ArrowRight, Hash, Trophy } from 'lucide-react';
 
 interface DayCardProps {
   day: WorkoutDay;
@@ -8,6 +8,10 @@ interface DayCardProps {
 }
 
 const DayCard: React.FC<DayCardProps> = ({ day, onClick }) => {
+  const isCompleted = day.exercises?.length > 0 && day.exercises.every(ex => 
+    ex.sets?.length > 0 && ex.sets.every(s => s.isCompleted)
+  );
+
   return (
     <div 
       onClick={onClick}
@@ -18,9 +22,17 @@ const DayCard: React.FC<DayCardProps> = ({ day, onClick }) => {
           DAY_{day.id.substring(0, 4).toUpperCase()}
         </div>
         
-        <h3 className="heading-athletic text-4xl text-white group-hover:text-primary transition-colors leading-tight">
-          {day.title}
-        </h3>
+        <div className="flex items-start justify-between">
+          <h3 className="heading-athletic text-4xl text-white group-hover:text-primary transition-colors leading-tight">
+            {day.title}
+          </h3>
+          {isCompleted && (
+            <div className="flex items-center gap-1 bg-primary/10 border border-primary/30 px-2 py-0.5 rounded-sm">
+              <Trophy className="w-3 h-3 text-primary" />
+              <span className="text-[8px] font-black text-primary tracking-tighter">DONE</span>
+            </div>
+          )}
+        </div>
       </div>
       
       <div className="flex items-end justify-between">
