@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { auth, googleProvider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
-import { ShieldAlert, Zap, Dumbbell, BarChart3 } from 'lucide-react';
+import { ShieldAlert, Zap, BarChart3 } from 'lucide-react';
 
 const Auth: React.FC = () => {
   const [loading, setLoading] = useState(false);
