@@ -262,7 +262,7 @@ const Dashboard: React.FC = () => {
             [ INSTAGRAM ]
           </a>
         </div>
-        <span className="mono-data text-[8px] font-black tracking-[0.3em] uppercase text-white/50">BUILD: 49.4y</span>
+        <span className="mono-data text-[8px] font-black tracking-[0.3em] uppercase text-white/50">BUILD: SKY</span>
       </footer>
     </div>
   );
