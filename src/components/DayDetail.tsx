@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { WorkoutDay, Exercise } from '../types';
-import { Plus, ChevronLeft, Cloud, CloudCheck, Activity } from 'lucide-react';
+import { Plus, ChevronLeft, Cloud, CloudCheck, Activity, ShieldCheck } from 'lucide-react';
 import ExerciseItem from './ExerciseItem';
 import { db } from '../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -11,7 +11,6 @@ interface DayDetailProps {
 }
 
 const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
-  // Defensive check for initialization
   const [exercises, setExercises] = useState<Exercise[]>(day?.exercises || []);
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSynced, setLastSynced] = useState<Date | null>(null);
@@ -38,9 +37,10 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
   };
 
   const addExercise = () => {
+    const uuid = () => (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11);
     const newEx: Exercise = {
-      id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11),
-      name: 'New Exercise',
+      id: uuid(),
+      name: 'NEW MOVEMENT',
       sets: []
     };
     const newExs = [...exercises, newEx];
@@ -55,88 +55,108 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black backdrop-blur-3xl flex flex-col overflow-hidden">
-      {/* Immersive Header */}
-      <header className="p-6 md:px-12 border-b border-white/10 flex items-center justify-between bg-black/40 relative z-10">
-        <div className="flex items-center gap-6">
+    <div className="fixed inset-0 z-[100] bg-[#050505] flex flex-col overflow-hidden animate-fade-in">
+      {/* Background Decor */}
+      <div className="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none opacity-40">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-cyan-500/10 blur-[120px] rounded-full" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-500/10 blur-[120px] rounded-full" />
+      </div>
+
+      {/* Immersive Navbar */}
+      <header className="px-6 py-8 md:px-12 flex items-center justify-between bg-black/40 backdrop-blur-md border-b border-white/5 relative z-10">
+        <div className="flex items-center gap-8">
           <button 
             onClick={onClose} 
-            className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all border border-white/10"
+            className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all border border-white/5"
           >
-            <ChevronLeft className="w-6 h-6" />
+            <ChevronLeft className="w-5 h-5" />
           </button>
+          
           <div>
-            <h2 className="text-2xl font-bold tracking-tight text-white mb-0.5">{day.title || 'Untitled Routine'}</h2>
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-white/30">
-              <Activity className="w-3 h-3 text-blue-500" />
-              Configuration Mode
+            <div className="flex items-center gap-3">
+              <h2 className="text-xl font-bold tracking-tight text-white/90">{day.title || 'Untitled Routine'}</h2>
+              <div className="flex items-center gap-2 px-2 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/20">
+                <span className="w-1 h-1 rounded-full bg-cyan-400 animate-pulse" />
+                <span className="text-[8px] font-black uppercase tracking-[0.2em] text-cyan-400">Live</span>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 mt-1">
+              <div className="flex items-center gap-1.5 text-[9px] font-bold uppercase tracking-widest text-white/20">
+                <ShieldCheck className="w-3 h-3 text-white/10" />
+                Secure Mode
+              </div>
+              <div className="w-1 h-1 rounded-full bg-white/5" />
+              <div className="text-[9px] font-bold uppercase tracking-widest text-white/20">
+                Data Instance: <span className="text-white/40 mono-data">{day.id.substring(0, 8)}</span>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="hidden md:flex flex-col items-end">
-            <div className="flex items-center gap-2 text-xs font-medium text-white/40">
+        <div className="flex items-center gap-6">
+          <div className="hidden lg:flex flex-col items-end">
+            <div className="flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase">
               {isSyncing ? (
-                <>
-                  <Cloud className="w-3 h-3 animate-pulse text-blue-400" />
-                  Synchronizing...
-                </>
+                <span className="text-cyan-400 flex items-center gap-2">
+                  <Cloud className="w-3 h-3 animate-pulse" />
+                  Syncing Core...
+                </span>
               ) : (
-                <>
-                  <CloudCheck className="w-3 h-3 text-green-400" />
-                  Cloud Secured
-                </>
+                <span className="text-green-500/60 flex items-center gap-2">
+                  <CloudCheck className="w-3 h-3" />
+                  Kernel Synced
+                </span>
               )}
             </div>
-            {lastSynced && !isSyncing && (
-              <span className="text-[10px] text-white/20 uppercase tracking-tighter">Verified: {lastSynced.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+            {lastSynced && (
+              <span className="text-[9px] text-white/10 font-medium uppercase mt-1">Validated: {lastSynced.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
             )}
           </div>
           
           <button 
             onClick={onClose}
-            className="glass-button-primary px-8"
+            className="glass-button-primary px-10 text-xs tracking-widest"
           >
-            Save & Exit
+            FINALIZE SESSION
           </button>
         </div>
       </header>
 
-      {/* Exercise List */}
-      <main className="flex-1 overflow-y-auto p-6 md:p-12 space-y-6 max-w-4xl mx-auto w-full scrollbar-hide relative z-10">
-        <div className="space-y-4">
+      {/* Main Command Center */}
+      <main className="flex-1 overflow-y-auto p-6 md:p-12 space-y-10 max-w-5xl mx-auto w-full scrollbar-hide relative z-10">
+        <div className="grid grid-cols-1 gap-6">
           {exercises.length === 0 ? (
-            <div className="py-20 flex flex-col items-center justify-center glass-card border-dashed bg-white/[0.01]">
-              <div className="w-16 h-16 rounded-3xl bg-white/5 flex items-center justify-center mb-6">
-                <Plus className="w-8 h-8 text-white/10" />
+            <div className="py-32 flex flex-col items-center justify-center glass-card border-dashed bg-white/[0.01] border-white/5">
+              <div className="w-20 h-20 rounded-3xl bg-white/5 flex items-center justify-center mb-6">
+                <Activity className="w-8 h-8 text-white/10" />
               </div>
-              <h3 className="text-lg font-medium text-white/40">No exercises assigned</h3>
-              <p className="text-sm text-white/20 mt-2">Start building your routine by adding your first lift.</p>
+              <h3 className="text-lg font-bold text-white/30 tracking-widest uppercase">No Modules Compiled</h3>
+              <p className="text-xs text-white/20 mt-3 uppercase tracking-widest">Append movement nodes to initialize routine.</p>
             </div>
           ) : (
-            exercises.map(ex => (
-              <ExerciseItem 
-                key={ex.id} 
-                exercise={ex} 
-                onUpdate={handleUpdateExercise}
-                onRemove={() => removeExercise(ex.id)}
-              />
+            exercises.map((ex, index) => (
+              <div key={ex.id} className="animate-slide-up" style={{ animationDelay: `${index * 50}ms` }}>
+                <ExerciseItem 
+                  exercise={ex} 
+                  onUpdate={handleUpdateExercise}
+                  onRemove={() => removeExercise(ex.id)}
+                />
+              </div>
             ))
           )}
         </div>
 
         <button
           onClick={addExercise}
-          className="w-full py-8 border-2 border-dashed border-white/5 rounded-[32px] flex flex-col items-center justify-center gap-3 text-white/30 hover:bg-white/[0.03] hover:border-blue-500/30 hover:text-blue-400/70 transition-all duration-500 group"
+          className="w-full py-12 glass-card border-dashed bg-white/[0.01] flex flex-col items-center justify-center gap-4 text-white/10 hover:bg-white/[0.03] hover:border-cyan-500/30 hover:text-cyan-400 group transition-all duration-700"
         >
-          <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-blue-500/10 transition-colors">
+          <div className="w-14 h-14 rounded-full border border-white/5 flex items-center justify-center group-hover:border-cyan-500/20 group-hover:bg-cyan-500/5 transition-all duration-500">
             <Plus className="w-6 h-6" />
           </div>
-          <span className="text-sm font-semibold tracking-wide uppercase">Incorporate New Movement</span>
+          <span className="text-[10px] font-black uppercase tracking-[0.3em]">Append Movement Node</span>
         </button>
         
-        <div className="h-20" /> {/* Spacer */}
+        <div className="h-24" />
       </main>
     </div>
   );

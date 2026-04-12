@@ -3,7 +3,7 @@ import { db, auth } from '../firebase';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeBatch, doc, deleteDoc } from 'firebase/firestore';
 import type { WorkoutDay } from '../types';
 import { useAuth } from '../AuthContext';
-import { Plus, LogOut, Layers, Sparkles, Dumbbell, ArrowRight, ClipboardCheck, Trash2 } from 'lucide-react';
+import { Plus, LogOut, Sparkles, ClipboardCheck, Trash2, LayoutGrid, Zap } from 'lucide-react';
 import DayCard from './DayCard';
 import DayDetail from './DayDetail';
 import WorkoutForm from './WorkoutForm';
@@ -61,7 +61,7 @@ const Dashboard: React.FC = () => {
 
   const handleDeleteDay = async (e: React.MouseEvent, dayId: string) => {
     e.stopPropagation();
-    if (!user || !window.confirm("Are you sure you want to delete this routine?")) return;
+    if (!user || !window.confirm("Confirm routine termination?")) return;
 
     try {
       await deleteDoc(doc(db, `users/${user.uid}/workout_days/${dayId}`));
@@ -87,27 +87,27 @@ const Dashboard: React.FC = () => {
 
       const ppl = [
         {
-          title: 'Push Day',
+          title: 'Hypertrophy Push',
           exercises: [
-            { id: uuid(), name: 'Bench Press', sets: createSets(3, 60, 10) },
+            { id: uuid(), name: 'Incline Bench Press', sets: createSets(3, 60, 10) },
             { id: uuid(), name: 'Overhead Press', sets: createSets(3, 40, 10) },
-            { id: uuid(), name: 'Lateral Raises', sets: createSets(3, 8, 12) },
+            { id: uuid(), name: 'Lateral Raises', sets: createSets(3, 8, 15) },
           ]
         },
         {
-          title: 'Pull Day',
+          title: 'Hypertrophy Pull',
           exercises: [
-            { id: uuid(), name: 'Pull-ups', sets: createSets(3, 0, 10) },
+            { id: uuid(), name: 'Weighted Pull-ups', sets: createSets(3, 10, 8) },
             { id: uuid(), name: 'Barbell Rows', sets: createSets(3, 50, 10) },
-            { id: uuid(), name: 'Bicep Curls', sets: createSets(3, 12, 12) },
+            { id: uuid(), name: 'Face Pulls', sets: createSets(3, 15, 15) },
           ]
         },
         {
-          title: 'Leg Day',
+          title: 'Hypertrophy Legs',
           exercises: [
-            { id: uuid(), name: 'Squats', sets: createSets(3, 70, 8) },
-            { id: uuid(), name: 'Leg Press', sets: createSets(3, 120, 10) },
-            { id: uuid(), name: 'Calf Raises', sets: createSets(3, 40, 15) },
+            { id: uuid(), name: 'Back Squats', sets: createSets(3, 70, 8) },
+            { id: uuid(), name: 'Romanian Deadlifts', sets: createSets(3, 80, 10) },
+            { id: uuid(), name: 'Leg Extensions', sets: createSets(3, 40, 12) },
           ]
         }
       ];
@@ -130,117 +130,103 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-8 animate-fade-in relative z-10">
-      {/* Background Decor */}
-      <div className="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-500/10 blur-[120px] rounded-full" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full" />
-      </div>
-
-      <header className="max-w-5xl mx-auto mb-12 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.3)]">
-            <Dumbbell className="w-6 h-6 text-white" />
+    <div className="min-h-screen p-4 md:p-10 animate-fade-in relative z-10">
+      <header className="max-w-5xl mx-auto mb-16 flex items-center justify-between">
+        <div className="flex items-center gap-5">
+          <div className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+            <Zap className="w-5 h-5 text-cyan-400 fill-cyan-400/20" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-white/60">Gym Log Track</h1>
-            <div className="premium-badge mt-1">Status: Active</div>
+            <h1 className="text-xl font-extrabold tracking-tight text-white/90">AuraLift <span className="text-white/20 font-light">OS</span></h1>
+            <div className="flex items-center gap-2 mt-0.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+              <span className="text-[10px] font-bold uppercase tracking-widest text-white/30">System Nominal</span>
+            </div>
           </div>
         </div>
         
         <button 
           onClick={() => auth.signOut()}
-          className="glass-button-secondary py-2.5 px-3"
+          className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all text-white/40 hover:text-white"
         >
-          <LogOut className="w-5 h-5 opacity-70" />
+          <LogOut className="w-4 h-4" />
         </button>
       </header>
 
-      <main className="max-w-5xl mx-auto space-y-12">
-        <section className="space-y-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 px-2">
-            <div>
-              <h2 className="text-xl font-semibold flex items-center gap-3">
-                <Layers className="w-5 h-5 text-blue-400" />
-                Training Architecture
-              </h2>
-              <p className="text-sm text-white/40 mt-1">Select a program to begin your session</p>
-            </div>
-            
-            <div className="flex flex-wrap items-center gap-3">
-              {days.length === 0 && (
-                <button 
-                  onClick={handleAutoFillPPL}
-                  disabled={actionLoading}
-                  className="glass-button-secondary py-2.5 px-5 bg-white/5 border-dashed border-white/20"
-                >
-                  <Sparkles className="w-4 h-4 text-blue-400" />
-                  Starter PPL Template
-                </button>
-              )}
-              <button 
-                onClick={() => setIsLogging(true)}
-                className="glass-button-secondary py-2.5 px-6 border-white/10"
-              >
-                <ClipboardCheck className="w-4 h-4 text-green-400" />
-                Log Session
-              </button>
-              <button 
-                onClick={() => setIsAdding(true)}
-                className="glass-button-primary py-2.5 px-6"
-              >
-                <Plus className="w-4 h-4 ml-[-4px]" />
-                New Routine
-              </button>
-            </div>
+      <main className="max-w-5xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <div className="space-y-1">
+            <h2 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+              <LayoutGrid className="w-5 h-5 text-purple-400/60" />
+              Core Architecture
+            </h2>
+            <p className="text-sm text-white/30">Initialize training sequence from active routines.</p>
           </div>
+          
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => setIsLogging(true)}
+              className="glass-button-secondary px-6 text-sm"
+            >
+              <ClipboardCheck className="w-4 h-4 text-cyan-400" />
+              Quick Log
+            </button>
+            <button 
+              onClick={() => setIsAdding(true)}
+              className="glass-button-primary px-6 text-sm"
+            >
+              <Plus className="w-4 h-4" />
+              New Routine
+            </button>
+          </div>
+        </div>
 
-          {isAdding && (
-            <form onSubmit={handleAddDay} className="glass-card p-8 animate-slide-up space-y-5 border-blue-500/20 bg-blue-500/5">
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-blue-400 ml-1">Routine Identity</label>
-                <input 
-                  placeholder="Enter day title (e.g. Upper Body Elite)"
-                  className="glass-input"
-                  value={newDayTitle}
-                  onChange={e => setNewDayTitle(e.target.value)}
-                  autoFocus
-                />
-              </div>
-              <div className="flex gap-4">
-                <button type="button" onClick={() => setIsAdding(false)} className="glass-button-secondary flex-1">Minimize</button>
+        {isAdding && (
+          <form onSubmit={handleAddDay} className="glass-card p-10 mb-12 animate-slide-up bg-white/[0.01] border-cyan-500/10">
+            <div className="max-w-md space-y-4">
+              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400/60 block ml-1">Routine Identity</label>
+              <input 
+                placeholder="Enter routine title (e.g. Alpha Protocol)"
+                className="glass-input text-lg"
+                value={newDayTitle}
+                onChange={e => setNewDayTitle(e.target.value)}
+                autoFocus
+              />
+              <div className="flex gap-4 pt-2">
+                <button type="button" onClick={() => setIsAdding(false)} className="glass-button-secondary flex-1">Abort</button>
                 <button type="submit" disabled={actionLoading} className="glass-button-primary flex-1">
-                  {actionLoading ? 'Allocating...' : 'Initialize Routine'}
+                  {actionLoading ? 'Deploying...' : 'Initialize'}
                 </button>
               </div>
-            </form>
-          )}
+            </div>
+          </form>
+        )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {days.length === 0 && !loading ? (
+          <div className="py-24 flex flex-col items-center justify-center glass-card border-dashed bg-white/[0.01] border-white/5">
+            <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6">
+              <Sparkles className="w-8 h-8 text-white/10" />
+            </div>
+            <h3 className="text-xl font-bold text-white/50 tracking-tight">System Purged</h3>
+            <p className="text-sm text-white/20 mt-2 max-w-xs text-center">No routines detected in local cluster. Initialize PPL template for rapid deployment.</p>
+            <button onClick={handleAutoFillPPL} className="mt-8 glass-button-primary px-10">
+              Apply Hypertrophy PPL
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {loading ? (
-              Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="glass-card h-32 animate-pulse" />
+              Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="glass-card h-40 animate-pulse border-white/5" />
               ))
-            ) : days.length === 0 ? (
-              <div className="col-span-full py-20 flex flex-col items-center justify-center glass-card border-dashed bg-white/[0.01]">
-                <div className="w-16 h-16 rounded-3xl bg-white/5 flex items-center justify-center mb-6">
-                  <ArrowRight className="w-8 h-8 text-white/20" />
-                </div>
-                <h3 className="text-lg font-medium text-white/60">No training modules found</h3>
-                <p className="text-sm text-white/30 mt-2 max-w-xs text-center px-4">Initialize your workout structure by creating a routine or starting with our pro template.</p>
-                <button onClick={handleAutoFillPPL} className="mt-8 text-blue-400 font-medium hover:text-blue-300 transition-colors flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  Apply Starter Template
-                </button>
-              </div>
             ) : (
               days.map((day) => (
-                <div key={day.id} className="relative group">
+                <div key={day.id} className="relative group animate-slide-up" style={{ animationDelay: `${days.indexOf(day) * 50}ms` }}>
                   <DayCard day={day} onClick={() => setSelectedDay(day)} />
                   <button 
                     onClick={(e) => handleDeleteDay(e, day.id)}
-                    className="absolute top-4 right-14 p-2 rounded-xl bg-red-500/5 text-red-500/20 group-hover:text-red-500/60 hover:text-red-400 hover:bg-red-500/10 transition-all z-20 flex items-center justify-center border border-transparent hover:border-red-500/20"
-                    title="Delete Routine"
+                    className="absolute top-4 right-14 p-2 rounded-xl text-white/0 group-hover:text-white/20 hover:text-red-500 transition-all z-20"
+                    title="Terminate Routine"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -248,7 +234,7 @@ const Dashboard: React.FC = () => {
               ))
             )}
           </div>
-        </section>
+        )}
       </main>
 
       {selectedDay && (

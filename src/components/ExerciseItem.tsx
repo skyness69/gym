@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Exercise, ExerciseSet } from '../types';
-import { Trash2, Layers, Plus, Circle, CheckCircle2 } from 'lucide-react';
+import { Trash2, Plus, Circle, CheckCircle2, Hash } from 'lucide-react';
 
 interface ExerciseItemProps {
   exercise: Exercise;
@@ -25,9 +25,10 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
   };
 
   const addSet = () => {
+    const uuid = () => (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11);
     const lastSet = exercise.sets && exercise.sets.length > 0 ? exercise.sets[exercise.sets.length - 1] : null;
     const newSet: ExerciseSet = {
-      id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11),
+      id: uuid(),
       weight: lastSet ? lastSet.weight : 0,
       reps: lastSet ? lastSet.reps : 10,
       isCompleted: false
@@ -41,18 +42,18 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
   };
 
   return (
-    <div className="glass-card p-6 md:p-8 space-y-6 relative group border-white/5 hover:border-white/20 transition-all duration-500">
+    <div className="glass-card p-6 md:p-10 space-y-8 bg-white/[0.01] border-white/5 relative overflow-hidden group">
       {/* Exercise Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div className="flex items-center gap-4 flex-1">
-          <div className="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20">
-            <Layers className="w-6 h-6" />
+      <div className="flex items-center justify-between pb-6 border-b border-white/5">
+        <div className="flex items-center gap-5 flex-1">
+          <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/20 group-hover:text-cyan-400/60 group-hover:border-cyan-400/20 transition-all duration-500">
+            <Hash className="w-6 h-6" />
           </div>
           
           <div className="flex-1">
             {isEditingName ? (
               <input 
-                className="bg-white/5 border-b border-blue-500/50 outline-none text-xl font-bold text-white w-full py-1"
+                className="bg-transparent border-b border-cyan-500/50 underline-offset-8 outline-none text-2xl font-bold text-white w-full uppercase tracking-tight"
                 value={localName}
                 onChange={e => setLocalName(e.target.value)}
                 onBlur={handleNameSave}
@@ -62,93 +63,108 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
             ) : (
               <h4 
                 onClick={() => setIsEditingName(true)}
-                className="text-xl font-bold text-white/90 group-hover:text-white cursor-text transition-colors"
+                className="text-2xl font-black text-white/80 group-hover:text-white cursor-text transition-colors uppercase tracking-tight"
               >
                 {exercise.name}
               </h4>
             )}
-            <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20 mt-1">Advanced Tactical Plan</p>
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20">Operational Module</span>
+              <div className="w-1 h-1 rounded-full bg-white/5" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/10">v1.2</span>
+            </div>
           </div>
         </div>
 
         <button 
           onClick={onRemove}
-          className="p-3 rounded-xl bg-red-500/5 text-red-500/40 hover:bg-red-500/10 hover:text-red-400 transition-all"
+          className="w-10 h-10 rounded-xl bg-red-500/5 text-red-500/0 group-hover:text-red-500/20 hover:text-red-500 hover:bg-red-500/10 transition-all flex items-center justify-center"
         >
-          <Trash2 className="w-5 h-5" />
+          <Trash2 className="w-4 h-4" />
         </button>
       </div>
 
-      {/* Set Header Labels (Desktop) */}
-      <div className="hidden md:grid grid-cols-[40px_1fr_1fr_60px_40px] gap-6 px-4 text-[10px] uppercase font-bold tracking-widest text-white/20">
-        <div className="text-center">Set</div>
-        <div>Weight (KG)</div>
-        <div>Reps</div>
-        <div className="text-center">Done</div>
-        <div></div>
-      </div>
+      {/* Sets Command Container */}
+      <div className="space-y-4">
+        {/* Table Header (Desktop) */}
+        <div className="hidden md:grid grid-cols-[60px_1fr_1fr_80px_60px] gap-6 px-4 mb-2">
+          <div className="text-[9px] font-black uppercase tracking-[0.2em] text-white/10">Set</div>
+          <div className="text-[9px] font-black uppercase tracking-[0.2em] text-white/10">Mass (KG)</div>
+          <div className="text-[9px] font-black uppercase tracking-[0.2em] text-white/10">Frequency</div>
+          <div className="text-[9px] font-black uppercase tracking-[0.2em] text-white/10 text-center">Status</div>
+          <div></div>
+        </div>
 
-      {/* Sets List */}
-      <div className="space-y-3">
-        {(exercise.sets || []).map((set, index) => (
-          <div 
-            key={set.id} 
-            className={`grid grid-cols-[40px_1fr_1fr_60px_40px] gap-3 md:gap-6 items-center p-3 rounded-2xl transition-all ${set.isCompleted ? 'bg-green-500/5 border border-green-500/10' : 'bg-white/[0.02] border border-white/5'}`}
+        {/* Sets List */}
+        <div className="space-y-3">
+          {(exercise.sets || []).map((set, index) => (
+            <div 
+              key={set.id} 
+              className={`grid grid-cols-1 md:grid-cols-[60px_1fr_1fr_80px_60px] gap-4 md:gap-6 items-center p-4 md:p-3 rounded-2xl transition-all duration-500 border ${set.isCompleted ? 'success-glow border-green-500/20' : 'bg-white/[0.01] border-white/5 hover:border-white/10'}`}
+            >
+              {/* Set Label */}
+              <div className="flex items-center justify-between md:justify-center">
+                <span className="md:hidden text-[10px] font-bold uppercase tracking-widest text-white/20">Sequence Index</span>
+                <span className="mono-data font-black text-white/20 group-hover:text-white/40">{String(index + 1).padStart(2, '0')}</span>
+              </div>
+
+              {/* Weight Input */}
+              <div className="relative">
+                <input 
+                  type="number"
+                  className={`glass-input text-center text-lg h-12 md:h-10 ${set.isCompleted ? 'text-green-400/80 border-green-500/10' : ''}`}
+                  value={set.weight || ''}
+                  onChange={e => handleUpdateSet(set.id, { weight: Number(e.target.value) })}
+                />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-white/10 uppercase md:hidden">Mass/KG</span>
+              </div>
+
+              {/* Reps Input */}
+              <div className="relative">
+                <input 
+                  type="number"
+                  className={`glass-input text-center text-lg h-12 md:h-10 ${set.isCompleted ? 'text-green-400/80 border-green-500/10' : ''}`}
+                  value={set.reps || ''}
+                  onChange={e => handleUpdateSet(set.id, { reps: Number(e.target.value) })}
+                />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-white/10 uppercase md:hidden">Reps</span>
+              </div>
+
+              {/* Completion Toggle */}
+              <div className="flex justify-center md:h-full">
+                <button 
+                  onClick={() => handleUpdateSet(set.id, { isCompleted: !set.isCompleted })}
+                  className={`w-full md:w-12 h-12 md:h-full rounded-xl flex items-center justify-center transition-all ${set.isCompleted ? 'text-green-400 bg-green-500/10' : 'text-white/5 bg-white/5 hover:text-white/20 hover:bg-white/10'}`}
+                >
+                  {set.isCompleted ? <CheckCircle2 className="w-5 h-5 shadow-[0_0_10px_rgba(34,197,94,0.4)]" /> : <Circle className="w-5 h-5" />}
+                </button>
+              </div>
+
+              {/* Remove Set */}
+              <div className="flex justify-center">
+                <button 
+                  onClick={() => removeSet(set.id)}
+                  className="w-full md:w-auto h-12 md:h-auto flex items-center justify-center text-white/5 hover:text-red-500 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+
+          {/* Append Structure */}
+          <button 
+            onClick={addSet}
+            className="w-full py-5 rounded-2xl border border-dashed border-white/5 text-white/[0.03] hover:bg-white/[0.02] hover:border-cyan-500/20 hover:text-cyan-400/40 transition-all flex items-center justify-center gap-3 group/btn uppercase tracking-[0.3em] text-[9px] font-black"
           >
-            {/* Set Number */}
-            <div className="text-center font-bold text-white/20">{index + 1}</div>
-
-            {/* Weight Input */}
-            <div className="relative">
-              <input 
-                type="number"
-                className={`w-full bg-black/20 border rounded-xl py-2 px-3 text-center font-bold transition-all outline-none ${set.isCompleted ? 'border-green-500/20 text-green-400/70' : 'border-white/5 text-blue-400 focus:border-blue-500/50'}`}
-                value={set.weight || ''}
-                onChange={e => handleUpdateSet(set.id, { weight: Number(e.target.value) })}
-              />
-            </div>
-
-            {/* Reps Input */}
-            <div className="relative">
-              <input 
-                type="number"
-                className={`w-full bg-black/20 border rounded-xl py-2 px-3 text-center font-bold transition-all outline-none ${set.isCompleted ? 'border-green-500/20 text-green-400/70' : 'border-white/5 text-white focus:border-blue-500/50'}`}
-                value={set.reps || ''}
-                onChange={e => handleUpdateSet(set.id, { reps: Number(e.target.value) })}
-              />
-            </div>
-
-            {/* Completion Toggle */}
-            <div className="flex justify-center">
-              <button 
-                onClick={() => handleUpdateSet(set.id, { isCompleted: !set.isCompleted })}
-                className={`transition-all ${set.isCompleted ? 'text-green-400' : 'text-white/10 hover:text-white/30'}`}
-              >
-                {set.isCompleted ? <CheckCircle2 className="w-6 h-6" /> : <Circle className="w-6 h-6" />}
-              </button>
-            </div>
-
-            {/* Remove Set */}
-            <div className="flex justify-center">
-              <button 
-                onClick={() => removeSet(set.id)}
-                className="text-white/10 hover:text-red-400/70 transition-colors"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        ))}
-
-        {/* Add Set Button */}
-        <button 
-          onClick={addSet}
-          className="w-full py-4 rounded-2xl border border-dashed border-white/5 text-white/20 hover:bg-white/[0.03] hover:border-blue-500/20 hover:text-blue-400/50 transition-all flex items-center justify-center gap-2 group/add"
-        >
-          <Plus className="w-4 h-4 group-hover/add:scale-125 transition-transform" />
-          <span className="text-[10px] font-bold uppercase tracking-widest">Append Set Structure</span>
-        </button>
+            <Plus className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-500" />
+            Append Set Structure
+          </button>
+        </div>
       </div>
+      
+      {/* Absolute scanline effect */}
+      <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/[0.02] to-transparent h-[1px] top-0 group-hover:top-full transition-all duration-[2000ms] pointer-events-none" />
     </div>
   );
 };
