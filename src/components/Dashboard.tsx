@@ -237,9 +237,9 @@ const Dashboard: React.FC = () => {
                     <DayCard day={day} onClick={() => setSelectedDay(day)} />
                     <button 
                       onClick={(e) => handleDeleteDay(e, day)}
-                      className="absolute top-4 right-4 p-2 text-white/0 group-hover:text-white/20 hover:text-primary transition-all z-20"
+                      className="absolute top-3 right-3 p-2 text-white/20 hover:text-red-500 hover:bg-red-500/10 transition-all z-20 rounded-sm"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 ))
