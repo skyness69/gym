@@ -13,7 +13,7 @@ interface DayDetailProps {
 const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
   const [exercises, setExercises] = useState<Exercise[]>(day.exercises);
   const [isSyncing, setIsSyncing] = useState(false);
-  const [lastSynced, setLastSynced] = useState<Date | null>(new Date());
+  const [lastSynced, setLastSynced] = useState<Date | null>(null);
 
   const syncToFirebase = async (newExercises: Exercise[]) => {
     setIsSyncing(true);

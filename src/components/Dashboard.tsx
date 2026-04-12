@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../firebase';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeBatch, doc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeBatch, doc, deleteDoc } from 'firebase/firestore';
 import type { WorkoutDay } from '../types';
 import { useAuth } from '../AuthContext';
-import { Plus, LogOut, Layers, Sparkles, Dumbbell, ArrowRight, ClipboardCheck } from 'lucide-react';
+import { Plus, LogOut, Layers, Sparkles, Dumbbell, ArrowRight, ClipboardCheck, Trash2 } from 'lucide-react';
 import DayCard from './DayCard';
 import DayDetail from './DayDetail';
 import WorkoutForm from './WorkoutForm';
@@ -56,6 +56,17 @@ const Dashboard: React.FC = () => {
       console.error("Error adding day:", error);
     } finally {
       setActionLoading(false);
+    }
+  };
+
+  const handleDeleteDay = async (e: React.MouseEvent, dayId: string) => {
+    e.stopPropagation();
+    if (!user || !window.confirm("Are you sure you want to delete this routine?")) return;
+
+    try {
+      await deleteDoc(doc(db, `users/${user.uid}/workout_days/${dayId}`));
+    } catch (error) {
+      console.error("Error deleting day:", error);
     }
   };
 
@@ -223,7 +234,16 @@ const Dashboard: React.FC = () => {
               </div>
             ) : (
               days.map((day) => (
-                <DayCard key={day.id} day={day} onClick={() => setSelectedDay(day)} />
+                <div key={day.id} className="relative group">
+                  <DayCard day={day} onClick={() => setSelectedDay(day)} />
+                  <button 
+                    onClick={(e) => handleDeleteDay(e, day.id)}
+                    className="absolute top-4 right-14 p-2 rounded-xl bg-red-500/5 text-red-500/0 group-hover:text-red-500/40 hover:text-red-400 transition-all z-20"
+                    title="Delete Routine"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               ))
             )}
           </div>
@@ -239,7 +259,6 @@ const Dashboard: React.FC = () => {
           onClose={() => setIsLogging(false)} 
           onSuccess={() => {
             setIsLogging(false);
-            // Could add a toast here
           }} 
         />
       )}
