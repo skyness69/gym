@@ -9,7 +9,6 @@ export interface Exercise {
   id: string;
   name: string;
   unit?: 'KG' | 'LB';
-  prWeight?: number;
   sets: ExerciseSet[];
 }
 
@@ -25,7 +24,6 @@ export interface WorkoutLog {
   id: string;
   userId: string;
   date: any;
-  dayTitle: string;
   exercises: Exercise[];
   totalVolume: number;
 }
