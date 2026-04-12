@@ -4,7 +4,7 @@ import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeB
 import type { WorkoutDay } from '../types';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
-import { Plus, LogOut, Trash2, Dumbbell, LayoutGrid, Timer, BarChart3 } from 'lucide-react';
+import { Plus, LogOut, Trash2, Dumbbell, LayoutGrid, Timer, BarChart3, Github, Instagram } from 'lucide-react';
 import DayCard from './DayCard';
 import DayDetail from './DayDetail';
 
@@ -252,6 +252,19 @@ const Dashboard: React.FC = () => {
       {selectedDay && (
         <DayDetail day={selectedDay} onClose={() => setSelectedDay(null)} />
       )}
+
+      {/* Social Links Footer */}
+      <footer className="mt-auto pt-16 pb-8 flex flex-col items-center justify-center gap-4 opacity-40 hover:opacity-100 transition-opacity w-full">
+        <div className="flex items-center gap-8">
+          <a href="https://github.com/skyness69" target="_blank" rel="noreferrer" className="text-white hover:text-primary transition-all hover:scale-110">
+            <Github className="w-5 h-5" />
+          </a>
+          <a href="https://www.instagram.com/49.4y/" target="_blank" rel="noreferrer" className="text-white hover:text-primary transition-all hover:scale-110">
+            <Instagram className="w-5 h-5" />
+          </a>
+        </div>
+        <span className="mono-data text-[8px] font-black tracking-[0.3em] uppercase text-white/50">BUILD: 49.4y</span>
+      </footer>
     </div>
   );
 };

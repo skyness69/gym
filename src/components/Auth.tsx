@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { auth, googleProvider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
-import { Zap, BarChart3 } from 'lucide-react';
+import { Zap, BarChart3, Github, Instagram } from 'lucide-react';
 
 const Auth: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -72,6 +72,16 @@ const Auth: React.FC = () => {
               </div>
            </div>
         </div>
+      </div>
+
+      {/* Social Links Footer */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-8 opacity-30 hover:opacity-100 transition-opacity z-20">
+         <a href="https://github.com/skyness69" target="_blank" rel="noreferrer" className="text-white hover:text-primary transition-all hover:scale-110">
+            <Github className="w-5 h-5" />
+         </a>
+         <a href="https://www.instagram.com/49.4y/" target="_blank" rel="noreferrer" className="text-white hover:text-primary transition-all hover:scale-110">
+            <Instagram className="w-5 h-5" />
+         </a>
       </div>
     </div>
   );
