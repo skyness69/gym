@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { WorkoutDay, Exercise } from '../types';
-import { Plus, ChevronLeft, Target, CloudCheck, Activity } from 'lucide-react';
+import { Plus, ChevronLeft, Target } from 'lucide-react';
 import ExerciseItem from './ExerciseItem';
 import { db } from '../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
