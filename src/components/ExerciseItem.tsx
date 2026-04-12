@@ -29,7 +29,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
     const lastSet = exercise.sets && exercise.sets.length > 0 ? exercise.sets[exercise.sets.length - 1] : null;
     const newSet: ExerciseSet = {
       id: uuid(),
-      weight: lastSet ? lastSet.weight : 0,
+      weight: lastSet ? lastSet.weight : 20,
       reps: lastSet ? lastSet.reps : 10,
       isCompleted: false
     };
@@ -131,9 +131,20 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
                 <p className={`text-[8px] font-black uppercase tracking-[0.1em] ${set.isCompleted ? 'text-primary/40' : 'text-white/10'}`}>LOAD_KG</p>
                 <input 
                   type="number"
+                  min="1"
+                  step="0.5"
                   className={`w-full bg-transparent heading-athletic text-4xl outline-none text-center transition-all ${set.isCompleted ? 'text-white' : 'text-white/40'}`}
                   value={set.weight || ''}
-                  onChange={e => handleUpdateSet(set.id, { weight: Number(e.target.value) })}
+                  onChange={e => {
+                    let val = parseFloat(e.target.value);
+                    if (val < 0) val = Math.abs(val); // Prevent negative numbers
+                    handleUpdateSet(set.id, { weight: val || 0 }); // Allow 0 temporarily while typing
+                  }}
+                  onBlur={e => {
+                    if (!set.weight || set.weight <= 0) {
+                       handleUpdateSet(set.id, { weight: 1 }); // Enforce minimum of 1 if left empty or 0
+                    }
+                  }}
                 />
               </div>
             </div>
