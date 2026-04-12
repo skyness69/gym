@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Exercise, ExerciseSet } from '../types';
-import { Trash2, Plus, Circle, CheckCircle2, Activity } from 'lucide-react';
+import { Trash2, Plus, Circle, CheckCircle2, Activity, RotateCcw } from 'lucide-react';
 import { useToast } from '../ToastContext';
 
 interface ExerciseItemProps {
@@ -51,6 +51,12 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
       restored.splice(setIndex, 0, setToRemove);
       onUpdate({ ...exercise, sets: restored });
     });
+  };
+
+  const uncheckAllSets = () => {
+    if (!exercise.sets) return;
+    const resetSets = exercise.sets.map(s => ({ ...s, isCompleted: false }));
+    onUpdate({ ...exercise, sets: resetSets });
   };
 
   const completedSets = exercise.sets?.filter(s => s.isCompleted).length || 0;
@@ -106,12 +112,24 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
           </div>
         </div>
 
-        <button 
-          onClick={onRemove}
-          className="w-8 h-8 flex items-center justify-center text-white/10 hover:text-red-500 transition-all hover:bg-red-500/5 rounded-sm"
-        >
-          <Trash2 className="w-3.5 h-3.5" />
-        </button>
+        <div className="flex items-center gap-2">
+          {completedSets > 0 && (
+            <button 
+              onClick={uncheckAllSets}
+              title="Reset All Sets"
+              className="w-8 h-8 flex items-center justify-center text-primary/40 hover:text-primary transition-all hover:bg-primary/5 rounded-sm"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          )}
+          <button 
+            onClick={onRemove}
+            title="Delete Exercise"
+            className="w-8 h-8 flex items-center justify-center text-white/10 hover:text-red-500 transition-all hover:bg-red-500/5 rounded-sm"
+          >
+            <Trash2 className="w-3.5 h-3.5" />
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 w-full">
