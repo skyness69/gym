@@ -11,7 +11,7 @@ interface DayDetailProps {
 }
 
 const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
-  const [exercises, setExercises] = useState<Exercise[]>(day.exercises);
+  const [exercises, setExercises] = useState<Exercise[]>(day.exercises || []);
   const [isSyncing, setIsSyncing] = useState(false);
   const [lastSynced, setLastSynced] = useState<Date | null>(null);
 
@@ -36,7 +36,7 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
 
   const addExercise = () => {
     const newEx: Exercise = {
-      id: crypto.randomUUID(),
+      id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11),
       name: 'New Exercise',
       sets: []
     };

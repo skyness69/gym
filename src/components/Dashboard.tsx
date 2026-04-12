@@ -75,10 +75,11 @@ const Dashboard: React.FC = () => {
     setActionLoading(true);
     try {
       const batch = writeBatch(db);
+      const uuid = () => (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11);
       
       const createSets = (count: number, weight: number, reps: number) => 
         Array.from({ length: count }).map(() => ({
-          id: crypto.randomUUID(),
+          id: uuid(),
           weight,
           reps,
           isCompleted: false
@@ -88,25 +89,25 @@ const Dashboard: React.FC = () => {
         {
           title: 'Push Day',
           exercises: [
-            { id: crypto.randomUUID(), name: 'Bench Press', sets: createSets(3, 60, 10) },
-            { id: crypto.randomUUID(), name: 'Overhead Press', sets: createSets(3, 40, 10) },
-            { id: crypto.randomUUID(), name: 'Lateral Raises', sets: createSets(3, 8, 12) },
+            { id: uuid(), name: 'Bench Press', sets: createSets(3, 60, 10) },
+            { id: uuid(), name: 'Overhead Press', sets: createSets(3, 40, 10) },
+            { id: uuid(), name: 'Lateral Raises', sets: createSets(3, 8, 12) },
           ]
         },
         {
           title: 'Pull Day',
           exercises: [
-            { id: crypto.randomUUID(), name: 'Pull-ups', sets: createSets(3, 0, 10) },
-            { id: crypto.randomUUID(), name: 'Barbell Rows', sets: createSets(3, 50, 10) },
-            { id: crypto.randomUUID(), name: 'Bicep Curls', sets: createSets(3, 12, 12) },
+            { id: uuid(), name: 'Pull-ups', sets: createSets(3, 0, 10) },
+            { id: uuid(), name: 'Barbell Rows', sets: createSets(3, 50, 10) },
+            { id: uuid(), name: 'Bicep Curls', sets: createSets(3, 12, 12) },
           ]
         },
         {
           title: 'Leg Day',
           exercises: [
-            { id: crypto.randomUUID(), name: 'Squats', sets: createSets(3, 70, 8) },
-            { id: crypto.randomUUID(), name: 'Leg Press', sets: createSets(3, 120, 10) },
-            { id: crypto.randomUUID(), name: 'Calf Raises', sets: createSets(3, 40, 15) },
+            { id: uuid(), name: 'Squats', sets: createSets(3, 70, 8) },
+            { id: uuid(), name: 'Leg Press', sets: createSets(3, 120, 10) },
+            { id: uuid(), name: 'Calf Raises', sets: createSets(3, 40, 15) },
           ]
         }
       ];

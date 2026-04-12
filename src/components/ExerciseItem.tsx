@@ -25,14 +25,14 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
   };
 
   const addSet = () => {
-    const lastSet = exercise.sets[exercise.sets.length - 1];
+    const lastSet = exercise.sets && exercise.sets.length > 0 ? exercise.sets[exercise.sets.length - 1] : null;
     const newSet: ExerciseSet = {
-      id: crypto.randomUUID(),
+      id: (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : Math.random().toString(36).substring(2, 11),
       weight: lastSet ? lastSet.weight : 0,
       reps: lastSet ? lastSet.reps : 10,
       isCompleted: false
     };
-    onUpdate({ ...exercise, sets: [...exercise.sets, newSet] });
+    onUpdate({ ...exercise, sets: [...(exercise.sets || []), newSet] });
   };
 
   const removeSet = (setId: string) => {
@@ -90,7 +90,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
 
       {/* Sets List */}
       <div className="space-y-3">
-        {exercise.sets.map((set, index) => (
+        {(exercise.sets || []).map((set, index) => (
           <div 
             key={set.id} 
             className={`grid grid-cols-[40px_1fr_1fr_60px_40px] gap-3 md:gap-6 items-center p-3 rounded-2xl transition-all ${set.isCompleted ? 'bg-green-500/5 border border-green-500/10' : 'bg-white/[0.02] border border-white/5'}`}
