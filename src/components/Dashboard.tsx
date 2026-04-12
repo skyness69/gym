@@ -3,10 +3,9 @@ import { db, auth } from '../firebase';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeBatch, doc, deleteDoc } from 'firebase/firestore';
 import type { WorkoutDay } from '../types';
 import { useAuth } from '../AuthContext';
-import { Plus, LogOut, ClipboardCheck, Trash2, Dumbbell, Zap, Flame } from 'lucide-react';
+import { Plus, LogOut, Trash2, Dumbbell, Zap, Flame } from 'lucide-react';
 import DayCard from './DayCard';
 import DayDetail from './DayDetail';
-import WorkoutForm from './WorkoutForm';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
@@ -14,7 +13,6 @@ const Dashboard: React.FC = () => {
   const [selectedDay, setSelectedDay] = useState<WorkoutDay | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
-  const [isLogging, setIsLogging] = useState(false);
   const [newDayTitle, setNewDayTitle] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -169,13 +167,6 @@ const Dashboard: React.FC = () => {
           
           <div className="flex flex-wrap items-center gap-4">
             <button 
-              onClick={() => setIsLogging(true)}
-              className="glass-button-secondary py-3 px-8 text-sm"
-            >
-              <ClipboardCheck className="w-4 h-4 text-energy" />
-              LOG SESSION
-            </button>
-            <button 
               onClick={() => setIsAdding(true)}
               className="glass-button-primary py-3 px-8 text-sm"
             >
@@ -245,15 +236,6 @@ const Dashboard: React.FC = () => {
 
       {selectedDay && (
         <DayDetail day={selectedDay} onClose={() => setSelectedDay(null)} />
-      )}
-
-      {isLogging && (
-        <WorkoutForm 
-          onClose={() => setIsLogging(false)} 
-          onSuccess={() => {
-            setIsLogging(false);
-          }} 
-        />
       )}
     </div>
   );
