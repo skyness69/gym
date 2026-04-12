@@ -4,7 +4,6 @@ import { Plus, ChevronLeft, Target } from 'lucide-react';
 import ExerciseItem from './ExerciseItem';
 import { db } from '../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
-import RestTimer from './RestTimer';
 
 interface DayDetailProps {
   day: WorkoutDay;
@@ -14,7 +13,6 @@ interface DayDetailProps {
 const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
   const [exercises, setExercises] = useState<Exercise[]>(day?.exercises || []);
   const [isSyncing, setIsSyncing] = useState(false);
-  const [showRestTimer, setShowRestTimer] = useState(false);
 
   if (!day) return null;
 
@@ -30,14 +28,10 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
     }
   };
 
-  const handleUpdateExercise = (updatedEx: Exercise, triggerTimer: boolean = false) => {
+  const handleUpdateExercise = (updatedEx: Exercise) => {
     const newExs = exercises.map(ex => ex.id === updatedEx.id ? updatedEx : ex);
     setExercises(newExs);
     syncToFirebase(newExs);
-    if (triggerTimer) {
-      setShowRestTimer(false);
-      setTimeout(() => setShowRestTimer(true), 100);
-    }
   };
 
   const addExercise = () => {
@@ -118,7 +112,7 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
               <div key={ex.id} className="animate-slide-up bg-surface p-4 md:p-8 performance-card" style={{ animationDelay: `${index * 50}ms` }}>
                 <ExerciseItem 
                   exercise={ex} 
-                  onUpdate={(updated) => handleUpdateExercise(updated, true)}
+                  onUpdate={(updated) => handleUpdateExercise(updated)}
                   onRemove={() => removeExercise(ex.id)}
                 />
               </div>
@@ -138,10 +132,6 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
         
         <div className="h-20" />
       </main>
-
-      {showRestTimer && (
-        <RestTimer duration={60} onClose={() => setShowRestTimer(false)} />
-      )}
     </div>
   );
 };
