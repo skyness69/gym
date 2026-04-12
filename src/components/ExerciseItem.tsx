@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type { Exercise, ExerciseSet } from '../types';
 import { Trash2, Plus, Circle, CheckCircle2, Activity } from 'lucide-react';
+import { useToast } from '../ToastContext';
 
 interface ExerciseItemProps {
   exercise: Exercise;
@@ -9,6 +10,7 @@ interface ExerciseItemProps {
 }
 
 const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemove }) => {
+  const { showUndo } = useToast();
   const [isEditingName, setIsEditingName] = useState(false);
   const [localName, setLocalName] = useState(exercise.name);
 
@@ -37,8 +39,18 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
   };
 
   const removeSet = (setId: string) => {
+    const setIndex = exercise.sets?.findIndex(s => s.id === setId) ?? -1;
+    if (setIndex === -1 || !exercise.sets) return;
+    
+    const setToRemove = exercise.sets[setIndex];
     const newSets = exercise.sets.filter(s => s.id !== setId);
     onUpdate({ ...exercise, sets: newSets });
+
+    showUndo(`SET DELETED`, () => {
+      const restored = [...newSets];
+      restored.splice(setIndex, 0, setToRemove);
+      onUpdate({ ...exercise, sets: restored });
+    });
   };
 
   const completedSets = exercise.sets?.filter(s => s.isCompleted).length || 0;

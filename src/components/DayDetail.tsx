@@ -4,6 +4,7 @@ import { Plus, ChevronLeft, Target } from 'lucide-react';
 import ExerciseItem from './ExerciseItem';
 import { db } from '../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
+import { useToast } from '../ToastContext';
 
 interface DayDetailProps {
   day: WorkoutDay;
@@ -11,6 +12,7 @@ interface DayDetailProps {
 }
 
 const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
+  const { showUndo } = useToast();
   const [exercises, setExercises] = useState<Exercise[]>(day?.exercises || []);
   const [isSyncing, setIsSyncing] = useState(false);
 
@@ -47,9 +49,21 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
   };
 
   const removeExercise = (id: string) => {
+    const exIndex = exercises.findIndex(e => e.id === id);
+    const exToRemove = exercises[exIndex];
+    
+    if (exIndex === -1) return;
+    
     const newExs = exercises.filter(ex => ex.id !== id);
     setExercises(newExs);
     syncToFirebase(newExs);
+
+    showUndo(`EXERCISE DELETED`, () => {
+      const restored = [...newExs];
+      restored.splice(exIndex, 0, exToRemove);
+      setExercises(restored);
+      syncToFirebase(restored);
+    });
   };
 
   return (

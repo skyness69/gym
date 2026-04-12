@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { db, auth } from '../firebase';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeBatch, doc, deleteDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeBatch, doc, deleteDoc, setDoc } from 'firebase/firestore';
 import type { WorkoutDay } from '../types';
 import { useAuth } from '../AuthContext';
+import { useToast } from '../ToastContext';
 import { Plus, LogOut, Trash2, Dumbbell, LayoutGrid, Timer, BarChart3 } from 'lucide-react';
 import DayCard from './DayCard';
 import DayDetail from './DayDetail';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
+  const { showUndo } = useToast();
   const [days, setDays] = useState<WorkoutDay[]>([]);
   const [selectedDay, setSelectedDay] = useState<WorkoutDay | null>(null);
   const [loading, setLoading] = useState(true);
@@ -57,12 +59,19 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const handleDeleteDay = async (e: React.MouseEvent, dayId: string) => {
+  const handleDeleteDay = async (e: React.MouseEvent, day: WorkoutDay) => {
     e.stopPropagation();
-    if (!user || !window.confirm("CONFIRM DELETION?")) return;
+    if (!user) return;
 
     try {
-      await deleteDoc(doc(db, `users/${user.uid}/workout_days/${dayId}`));
+      await deleteDoc(doc(db, `users/${user.uid}/workout_days/${day.id}`));
+      showUndo(`ROUTINE DAY DELETED`, async () => {
+        try {
+          await setDoc(doc(db, `users/${user.uid}/workout_days/${day.id}`), day);
+        } catch(err) {
+          console.error("Undo error:", err);
+        }
+      });
     } catch (error) {
       console.error("Error deleting day:", error);
     }
@@ -227,7 +236,7 @@ const Dashboard: React.FC = () => {
                   <div key={day.id} className="relative group animate-slide-up bg-surface p-6 overflow-hidden performance-card performance-card-hover" style={{ animationDelay: `${days.indexOf(day) * 50}ms` }}>
                     <DayCard day={day} onClick={() => setSelectedDay(day)} />
                     <button 
-                      onClick={(e) => handleDeleteDay(e, day.id)}
+                      onClick={(e) => handleDeleteDay(e, day)}
                       className="absolute top-4 right-4 p-2 text-white/0 group-hover:text-white/20 hover:text-primary transition-all z-20"
                     >
                       <Trash2 className="w-3.5 h-3.5" />

@@ -3,6 +3,8 @@ import { AuthProvider, useAuth } from './AuthContext';
 import Auth from './components/Auth';
 import Dashboard from './components/Dashboard';
 
+import { ToastProvider } from './ToastContext';
+
 const AppContent: React.FC = () => {
   const { user } = useAuth();
   
@@ -12,7 +14,9 @@ const AppContent: React.FC = () => {
 const App: React.FC = () => {
   return (
     <AuthProvider>
-      <AppContent />
+      <ToastProvider>
+        <AppContent />
+      </ToastProvider>
     </AuthProvider>
   );
 };
