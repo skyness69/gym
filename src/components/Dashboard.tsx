@@ -129,7 +129,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen p-6 md:p-12 lg:p-20 flex flex-col items-center">
-      <div className="w-full max-w-7xl animate-fade-in flex flex-col gap-12 md:gap-20">
+      <div className="w-full max-w-7xl animate-fade-in flex flex-col gap-10">
         
         {/* Navigation / Brand Header */}
         <header className="flex items-center justify-between border-b border-white/5 pb-8">
@@ -205,7 +205,7 @@ const Dashboard: React.FC = () => {
         )}
 
         {/* Training Grid */}
-        <section>
+        <section className="mt-8">
           {days.length === 0 && !loading ? (
             <div className="py-40 flex flex-col items-center justify-center performance-card bg-transparent border-dashed">
               <div className="w-24 h-24 bg-white/5 flex items-center justify-center mb-10">
@@ -217,20 +217,20 @@ const Dashboard: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 w-full bg-white/5">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
               {loading ? (
                 Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="bg-surface h-80 animate-pulse" />
+                  <div key={i} className="bg-surface h-80 animate-pulse performance-card" />
                 ))
               ) : (
                 days.map((day) => (
-                  <div key={day.id} className="relative group animate-slide-up bg-surface p-12 overflow-hidden" style={{ animationDelay: `${days.indexOf(day) * 50}ms` }}>
+                  <div key={day.id} className="relative group animate-slide-up bg-surface p-12 overflow-hidden performance-card performance-card-hover" style={{ animationDelay: `${days.indexOf(day) * 50}ms` }}>
                     <DayCard day={day} onClick={() => setSelectedDay(day)} />
                     <button 
                       onClick={(e) => handleDeleteDay(e, day.id)}
-                      className="absolute bottom-12 right-12 p-3 text-white/0 group-hover:text-white/20 hover:text-primary transition-all z-20"
+                      className="absolute top-6 right-6 p-3 text-white/0 group-hover:text-white/20 hover:text-primary transition-all z-20"
                     >
-                      <Trash2 className="w-5 h-5" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 ))
