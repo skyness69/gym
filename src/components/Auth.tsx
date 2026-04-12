@@ -30,14 +30,14 @@ const Auth: React.FC = () => {
             <div className="w-10 h-10 bg-primary flex items-center justify-center">
                <BarChart3 className="w-6 h-6 text-black" />
             </div>
-            <span className="heading-athletic text-2xl text-white">PERFORMANCE_ENGINE</span>
+            <span className="heading-athletic text-2xl text-white">IRON_TRACKER</span>
           </div>
 
           <div className="space-y-2">
             <h1 className="heading-athletic text-[80px] md:text-[120px] leading-[0.85] text-white tracking-tighter">
               GO<br/>HARD.
             </h1>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">ELITE DEPLOYMENT TERMINAL</p>
+            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">ELITE WORKOUT TERMINAL</p>
           </div>
         </div>
 
@@ -45,10 +45,10 @@ const Auth: React.FC = () => {
         <div className="w-full max-w-xs performance-card p-0.5 animate-slide-up">
            <div className="bg-surface p-8 space-y-8">
               <div className="space-y-3">
-                <h2 className="heading-athletic text-3xl text-white">VALIDATE_USER</h2>
+                <h2 className="heading-athletic text-3xl text-white">ATHLETE_LOGIN</h2>
                 <div className="h-0.5 w-12 bg-primary" />
                 <p className="text-[9px] font-medium text-white/20 leading-relaxed uppercase tracking-widest">
-                  Secure biometric handshake required.
+                  Secure authentication required to access logs.
                 </p>
               </div>
 
@@ -68,7 +68,7 @@ const Auth: React.FC = () => {
 
               <div className="flex items-center gap-2 opacity-10">
                  <Zap className="w-3 h-3" />
-                 <span className="text-[7px] font-black uppercase tracking-widest">Quantum Secured</span>
+                 <span className="text-[7px] font-black uppercase tracking-widest">Secure Cloud Vault</span>
               </div>
            </div>
         </div>

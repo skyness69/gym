@@ -72,7 +72,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
 
           <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
             <div className="space-y-2">
-               <p className="text-[7px] font-black uppercase tracking-[0.3em] text-white/30 italic">TELEMETRY_ENGINE</p>
+               <p className="text-[7px] font-black uppercase tracking-[0.3em] text-white/30 italic">VOLUME_PROGRESS</p>
                <div className="flex items-center gap-3">
                  <div className="h-[2px] w-24 sm:w-40 bg-white/5 overflow-hidden rounded-full">
                     <div 
@@ -85,10 +85,10 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
             </div>
 
             <div className="space-y-2">
-              <p className="text-[7px] font-black uppercase tracking-[0.3em] text-white/30 italic">ACTIVE_SPEC</p>
+              <p className="text-[7px] font-black uppercase tracking-[0.3em] text-white/30 italic">INTENSITY</p>
               <div className="flex items-center gap-1.5">
                 <Activity className="w-2.5 h-2.5 text-primary" />
-                <span className="heading-athletic text-sm text-white/60">CORE_V4</span>
+                <span className="heading-athletic text-sm text-white/60">MAX_EFFORT</span>
               </div>
             </div>
           </div>
@@ -109,7 +109,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
             className={`p-4 h-28 flex flex-col justify-between group/set border-t-2 performance-card ${set.isCompleted ? 'border-primary ring-1 ring-primary/20' : 'border-white/5 opacity-80 hover:opacity-100'}`}
           >
             <div className="flex items-center justify-between">
-              <span className={`mono-data text-[7px] font-black uppercase tracking-[0.2em] ${set.isCompleted ? 'text-primary' : 'text-white/20'}`}>S_{String(index + 1).padStart(2, '0')}</span>
+              <span className={`mono-data text-[7px] font-black uppercase tracking-[0.2em] ${set.isCompleted ? 'text-primary' : 'text-white/20'}`}>SET_{String(index + 1).padStart(2, '0')}</span>
               <button 
                 onClick={() => handleUpdateSet(set.id, { isCompleted: !set.isCompleted })}
                 className={`w-7 h-7 flex items-center justify-center transition-all border ${set.isCompleted ? 'bg-primary border-primary text-black shadow-[0_0_10px_rgba(255,63,0,0.4)]' : 'bg-white/5 border-white/5 text-white/5 hover:border-primary/50'}`}
@@ -120,7 +120,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
 
             <div className="space-y-1">
               <div className="flex flex-col items-center">
-                <p className={`text-[8px] font-black uppercase tracking-[0.1em] ${set.isCompleted ? 'text-primary/40' : 'text-white/10'}`}>MASS_KG</p>
+                <p className={`text-[8px] font-black uppercase tracking-[0.1em] ${set.isCompleted ? 'text-primary/40' : 'text-white/10'}`}>LOAD_KG</p>
                 <input 
                   type="number"
                   className={`w-full bg-transparent heading-athletic text-4xl outline-none text-center transition-all ${set.isCompleted ? 'text-white' : 'text-white/40'}`}

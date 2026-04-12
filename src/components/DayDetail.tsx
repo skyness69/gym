@@ -71,7 +71,7 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <span className="status-dot active w-1.5 h-1.5" />
-                  <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary">LIVE ENGINE</span>
+                  <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary">ACTIVE SESSION</span>
                 </div>
                 <div className="text-[8px] font-black uppercase tracking-[0.2em] text-white/10">
                   ID: <span className="text-white/40 mono-data">{day.id.substring(0, 6)}</span>
@@ -105,7 +105,7 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
               <div className="w-12 h-12 bg-white/5 flex items-center justify-center mb-6">
                 <Target className="w-6 h-6 text-white/5" />
               </div>
-              <h3 className="heading-athletic text-2xl text-white/10 tracking-widest">CLUSTER_VOID</h3>
+              <h3 className="heading-athletic text-2xl text-white/10 tracking-widest">NO EXERCISES YET</h3>
             </div>
           ) : (
             exercises.map((ex, index) => (
@@ -127,7 +127,7 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
           <div className="w-10 h-10 border border-white/5 flex items-center justify-center group-hover:border-primary group-hover:bg-primary/5 transition-all">
             <Plus className="w-5 h-5" />
           </div>
-          <span className="heading-athletic text-xl tracking-widest">DEPLOY NODE</span>
+          <span className="heading-athletic text-xl tracking-widest">ADD MOVEMENT</span>
         </button>
         
         <div className="h-20" />

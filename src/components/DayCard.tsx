@@ -15,7 +15,7 @@ const DayCard: React.FC<DayCardProps> = ({ day, onClick }) => {
     >
       <div className="space-y-3">
         <div className="mono-data text-[8px] font-black text-primary tracking-[0.3em] opacity-30 group-hover:opacity-100 transition-opacity">
-          PROT_{day.id.substring(0, 4).toUpperCase()}
+          DAY_{day.id.substring(0, 4).toUpperCase()}
         </div>
         
         <h3 className="heading-athletic text-4xl text-white group-hover:text-primary transition-colors leading-tight">
@@ -29,7 +29,7 @@ const DayCard: React.FC<DayCardProps> = ({ day, onClick }) => {
             <Hash className="w-2.5 h-2.5 text-white/10" />
             <span className="mono-data text-lg font-black text-white">{String(day.exercises?.length || 0).padStart(2, '0')}</span>
           </div>
-          <p className="text-[8px] font-black uppercase tracking-widest text-white/5">Nodes</p>
+          <p className="text-[8px] font-black uppercase tracking-widest text-white/5">Exercises</p>
         </div>
         
         <div className="w-8 h-8 border border-white/5 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all">

@@ -137,13 +137,13 @@ const Dashboard: React.FC = () => {
             <div className="w-8 h-8 bg-primary flex items-center justify-center">
               <BarChart3 className="w-5 h-5 text-black" />
             </div>
-            <h1 className="heading-athletic text-2xl tracking-tight text-white">PERFORMANCE <span className="text-white/40">CORE</span></h1>
+            <h1 className="heading-athletic text-2xl tracking-tight text-white">IRON <span className="text-white/40">TRACKER</span></h1>
           </div>
           
           <div className="flex items-center gap-4">
             <div className="hidden sm:flex items-center gap-2">
               <span className="status-dot active w-1.5 h-1.5" />
-              <span className="text-[8px] font-black uppercase tracking-widest text-primary">LIVE ENGINE</span>
+              <span className="text-[8px] font-black uppercase tracking-widest text-primary">ACTIVE LOG</span>
             </div>
             <button 
               onClick={() => auth.signOut()}
@@ -157,7 +157,7 @@ const Dashboard: React.FC = () => {
         {/* Dashboard Title & Actions */}
         <section className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           <div className="space-y-3">
-            <h2 className="heading-athletic text-5xl sm:text-6xl md:text-7xl text-white leading-[0.9]">ACTIVE_RETIREMENT</h2>
+            <h2 className="heading-athletic text-5xl sm:text-6xl md:text-7xl text-white leading-[0.9]">CURRENT_SPLIT</h2>
             <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
               <div className="flex items-center gap-2 text-[8px] font-black text-white/10 tracking-[0.2em] uppercase">
                 <Timer className="w-3 h-3" />
@@ -165,7 +165,7 @@ const Dashboard: React.FC = () => {
               </div>
               <div className="flex items-center gap-2 text-[8px] font-black text-white/10 tracking-[0.2em] uppercase">
                 <LayoutGrid className="w-3 h-3 text-primary/40" />
-                MODS: {days.length}
+                DAYS: {days.length}
               </div>
             </div>
           </div>
@@ -176,7 +176,7 @@ const Dashboard: React.FC = () => {
               className="btn-blaze w-full sm:w-auto whitespace-nowrap"
             >
               <Plus className="w-3.5 h-3.5" />
-              CREATE MODULE
+              ADD ROUTINE DAY
             </button>
           </div>
         </section>
@@ -185,9 +185,9 @@ const Dashboard: React.FC = () => {
           <form onSubmit={handleAddDay} className="performance-card p-6 animate-slide-up">
             <div className="flex flex-col md:flex-row items-end gap-6">
               <div className="flex-1 space-y-2 w-full">
-                <label className="text-[8px] font-black text-primary uppercase tracking-[0.3em]">Module Title</label>
+                <label className="text-[8px] font-black text-primary uppercase tracking-[0.3em]">Day Name</label>
                 <input 
-                  placeholder="IDENTITY..."
+                  placeholder="EXAMPLE: PULL DAY..."
                   className="input-performance text-2xl heading-athletic"
                   value={newDayTitle}
                   onChange={e => setNewDayTitle(e.target.value)}
@@ -197,7 +197,7 @@ const Dashboard: React.FC = () => {
               <div className="flex gap-2 w-full md:w-auto">
                 <button type="button" onClick={() => setIsAdding(false)} className="btn-outline flex-1 md:w-32">CANCEL</button>
                 <button type="submit" disabled={actionLoading} className="btn-blaze flex-1 md:w-32">
-                  {actionLoading ? 'PENDING...' : 'INITIATE'}
+                  {actionLoading ? 'SAVING...' : 'CREATE'}
                 </button>
               </div>
             </div>
@@ -211,9 +211,9 @@ const Dashboard: React.FC = () => {
               <div className="w-16 h-16 bg-white/5 flex items-center justify-center mb-6">
                 <Dumbbell className="w-8 h-8 text-white/20" />
               </div>
-              <h3 className="heading-athletic text-2xl text-white/40 mb-6">NOTHING DEPLOYED</h3>
+              <h3 className="heading-athletic text-2xl text-white/40 mb-6">NO WORKOUTS FOUND</h3>
               <button onClick={handleAutoFillPPL} className="btn-blaze px-10">
-                DECODE PPL
+                GENERATE PPL SPLIT
               </button>
             </div>
           ) : (
