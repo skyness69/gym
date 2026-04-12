@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { WorkoutDay, Exercise } from '../types';
-import { Plus, ChevronLeft, Cloud, CloudCheck, Target } from 'lucide-react';
+import { Plus, ChevronLeft, Target, CloudCheck, Activity } from 'lucide-react';
 import ExerciseItem from './ExerciseItem';
 import { db } from '../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -59,72 +59,69 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-[#050505] flex flex-col overflow-hidden animate-fade-in font-['Barlow_Condensed']">
-      {/* Industrial Overlay */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.03] grain-texture -z-10" />
-
-      {/* Rugged Header */}
-      <header className="px-6 py-10 md:px-12 flex items-center justify-between bg-black/80 backdrop-blur-3xl border-b-2 border-white/5 relative z-10">
-        <div className="flex items-center gap-10">
+    <div className="fixed inset-0 z-[100] bg-background flex flex-col overflow-hidden animate-fade-in font-['Inter']">
+      
+      {/* High-Performance Navbar */}
+      <header className="px-12 py-12 md:px-20 border-b border-white/5 flex items-center justify-between bg-surface relative z-10">
+        <div className="flex items-center gap-12">
           <button 
             onClick={onClose} 
-            className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center text-white/20 hover:text-energy hover:bg-energy/5 hover:border-energy/20 transition-all border border-white/10"
+            className="w-14 h-14 bg-white/5 flex items-center justify-center text-white/40 hover:text-primary transition-all rounded-sm border border-white/5 hover:border-primary"
           >
             <ChevronLeft className="w-6 h-6" />
           </button>
           
-          <div className="space-y-1">
-            <h2 className="heading-power text-4xl tracking-tighter text-white">{day.title}</h2>
-            <div className="flex items-center gap-6">
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-energy animate-pulse" />
-                <span className="text-[11px] font-black uppercase tracking-[0.2em] text-energy">Active Briefing</span>
+          <div className="space-y-4">
+            <h2 className="heading-athletic text-8xl md:text-9xl text-white leading-none">{day.title}</h2>
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-3">
+                <span className="status-dot active" />
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">LIVE PERFORMANCE LOG</span>
               </div>
-              <div className="hidden md:flex items-center gap-2 text-[10px] font-bold text-white/20 uppercase tracking-widest">
-                ID: <span className="mono-data text-white/40">{day.id.substring(0, 12)}</span>
+              <div className="w-[1px] h-3 bg-white/10" />
+              <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/20">
+                MODULE: <span className="text-white mono-data">{day.id.substring(0, 10)}</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-8">
-          <div className="hidden lg:flex flex-col items-end">
-            <div className="flex items-center gap-3">
-              {isSyncing ? (
-                <span className="text-energy animate-pulse text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                  <Cloud className="w-3 h-3" /> Encrypting...
-                </span>
-              ) : (
-                <span className="text-white/20 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
-                  <CloudCheck className="w-3 h-3 text-energy/40" /> Cluster Synced
-                </span>
-              )}
-            </div>
+        <div className="flex items-center gap-12">
+          <div className="hidden lg:flex flex-col items-end gap-2">
+            {isSyncing ? (
+              <span className="text-primary text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
+                <Activity className="w-3 h-3 animate-spin" /> ENCRYPTING TELEMETRY
+              </span>
+            ) : (
+              <span className="text-white/20 text-[10px] font-black uppercase tracking-widest flex items-center gap-3">
+                <CloudCheck className="w-3 h-3 text-primary/40" /> CLUSTER SYNCED
+              </span>
+            )}
+            <div className="text-[8px] font-black text-white/5 tracking-[0.5em] uppercase">Security Verified: SSL_V2</div>
           </div>
           
           <button 
             onClick={onClose}
-            className="glass-button-primary px-12 text-sm"
+            className="btn-blaze px-16 h-14"
           >
-            TERMINATE SESSION
+            COMPLETE SESSION
           </button>
         </div>
       </header>
 
-      {/* Main Deployment Area */}
-      <main className="flex-1 overflow-y-auto p-6 md:p-12 space-y-12 max-w-6xl mx-auto w-full scrollbar-hide relative z-10">
-        <div className="grid grid-cols-1 gap-12">
+      {/* Deployment Floor */}
+      <main className="flex-1 overflow-y-auto p-12 md:p-20 space-y-20 max-w-7xl mx-auto w-full scrollbar-hide relative z-10">
+        <div className="flex flex-col gap-1 w-full bg-white/5">
           {exercises.length === 0 ? (
-            <div className="py-40 flex flex-col items-center justify-center glass-card border-dashed bg-white/[0.01] border-white/5">
-              <div className="w-24 h-24 rounded-lg bg-white/5 flex items-center justify-center mb-10 border border-white/10">
+            <div className="py-60 flex flex-col items-center justify-center bg-surface">
+              <div className="w-24 h-24 bg-white/5 flex items-center justify-center mb-10">
                 <Target className="w-10 h-10 text-white/10" />
               </div>
-              <h3 className="heading-power text-2xl text-white/30 tracking-widest uppercase">No Movement Nodes Assigned</h3>
-              <p className="text-sm font-bold text-white/10 mt-4 uppercase tracking-[0.2em]">Deploy hardware to initialize cluster.</p>
+              <h3 className="heading-athletic text-6xl text-white/20 tracking-widest uppercase">CLUSTER VOID</h3>
             </div>
           ) : (
             exercises.map((ex, index) => (
-              <div key={ex.id} className="animate-slide-up" style={{ animationDelay: `${index * 50}ms` }}>
+              <div key={ex.id} className="animate-slide-up bg-surface p-12 md:p-20" style={{ animationDelay: `${index * 50}ms` }}>
                 <ExerciseItem 
                   exercise={ex} 
                   onUpdate={(updated) => handleUpdateExercise(updated, true)}
@@ -137,15 +134,15 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
 
         <button
           onClick={addExercise}
-          className="w-full py-20 glass-card border-dashed bg-white/[0.01] border-2 border-white/5 flex flex-col items-center justify-center gap-6 text-white/10 hover:bg-white/[0.03] hover:border-energy/30 hover:text-energy group transition-all duration-700"
+          className="w-full py-32 border-2 border-dashed border-white/10 bg-surface flex flex-col items-center justify-center gap-8 text-white/20 hover:bg-white/[0.02] hover:border-primary hover:text-primary group transition-all duration-700"
         >
-          <div className="w-16 h-16 rounded-lg border border-white/10 flex items-center justify-center group-hover:border-energy/30 group-hover:bg-energy/5 transition-all duration-500">
-            <Plus className="w-8 h-8" />
+          <div className="w-20 h-20 border-2 border-white/5 flex items-center justify-center group-hover:border-primary group-hover:bg-primary/5 transition-all">
+            <Plus className="w-10 h-10" />
           </div>
-          <span className="heading-power text-lg tracking-[0.3em]">REPLOY MOVEMENT NODE</span>
+          <span className="heading-athletic text-4xl tracking-widest">DEPLOY NEW NODE</span>
         </button>
         
-        <div className="h-40" />
+        <div className="h-60" />
       </main>
 
       {showRestTimer && (

@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --color-background: #080808;
-  --color-energy: #22c55e; /* Neon Green */
-  --color-energy-glow: rgba(34, 197, 94, 0.4);
-  --color-cyan-glow: rgba(34, 197, 94, 0.1);
-  --color-purple-glow: rgba(16, 185, 129, 0.1);
+  --color-background: #0c0c0e;
+  --color-surface: #161618;
+  --color-primary: #ff5f1f; /* Blaze Orange */
+  --color-primary-glow: rgba(255, 95, 31, 0.4);
+  --color-accent: #ffffff;
 }
 
 :root {
@@ -15,19 +15,19 @@
 
 body {
   margin: 0;
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: 'Inter', sans-serif;
   background-color: var(--color-background);
   color: #ffffff;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Hardcore Typography */
-@utility heading-power {
-  font-family: 'Oswald', sans-serif;
+/* Blaze Athletic Typography */
+@utility heading-athletic {
+  font-family: 'Bebas Neue', sans-serif;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 0.9;
 }
 
 @utility mono-data {
@@ -35,73 +35,74 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Industrial Texture Utility */
-@utility grain-texture {
-  position: relative;
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    opacity: 0.03;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-  }
-}
-
-/* Rugged Glassmorphism */
-@utility glass-card {
-  @apply grain-texture;
-  background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+/* Sharp Performance Cards */
+@utility performance-card {
+  background: var(--color-surface);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s ease;
 }
 
-@utility glass-card-hover {
+@utility performance-card-hover {
   &:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(34, 197, 94, 0.2);
-    transform: scale(1.005);
-    box-shadow: 0 0 30px rgba(34, 197, 94, 0.05);
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(255, 95, 31, 0.1);
   }
 }
 
-@utility glass-button-primary {
-  @apply px-6 py-3 rounded-md font-black uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-3 grain-texture;
-  background: #22c55e;
+@utility btn-blaze {
+  @apply px-8 py-4 font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 rounded-sm;
+  background: var(--color-primary);
   color: #000;
-  box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 0.75rem;
   &:hover:not(:disabled) {
-    background: #4ade80;
-    box-shadow: 0 0 40px rgba(34, 197, 94, 0.4);
-    transform: translateY(-2px);
+    background: #ffffff;
+    transform: scale(1.02);
   }
   &:disabled {
-    opacity: 0.4;
+    opacity: 0.3;
     cursor: not-allowed;
   }
 }
 
-@utility glass-button-secondary {
-  @apply px-6 py-3 rounded-md font-black uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-3 border border-white/10;
-  background: rgba(255, 255, 255, 0.02);
+@utility btn-outline {
+  @apply px-8 py-4 font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 border-2 border-white/10 rounded-sm;
+  background: transparent;
   color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  font-size: 0.75rem;
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
   }
 }
 
-@utility input-rugged {
-  @apply w-full bg-black/40 border border-white/5 rounded-lg px-4 py-3 text-white outline-none transition-all duration-300 mono-data uppercase;
+@utility input-performance {
+  @apply w-full bg-[#1c1c1e] border-0 border-b-2 border-white/5 px-4 py-4 text-white outline-none transition-all duration-300 font-bold uppercase placeholder:text-white/10;
   &:focus {
-    border-color: #22c55e;
-    box-shadow: 0 0 15px rgba(34, 197, 94, 0.1);
+    border-color: var(--color-primary);
+    background: #242426;
   }
+}
+
+/* Performance Progress */
+@utility progress-bar {
+  @apply h-1 bg-white/5 rounded-full overflow-hidden;
+  .filler {
+    @apply h-full bg-primary transition-all duration-700;
+  }
+}
+
+/* Status Indicators */
+@utility status-dot {
+  @apply w-2 h-2 rounded-full;
+  &.active { @apply bg-primary animate-pulse; }
+  &.inactive { @apply bg-white/20; }
 }
 
 /* Animations */
@@ -110,10 +111,7 @@ body {
     animation: fadeIn 0.3s ease-out forwards;
   }
   .animate-slide-up {
-    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-  .animate-pulse-glow {
-    animation: pulseGlow 2s infinite;
+    animation: slideUp 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
   }
 }
 
@@ -123,14 +121,8 @@ body {
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
+  from { transform: translateY(30px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes pulseGlow {
-  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
-  70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
 }
 
 .scrollbar-hide::-webkit-scrollbar { display: none; }

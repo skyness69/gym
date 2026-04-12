@@ -3,7 +3,7 @@ import { db, auth } from '../firebase';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeBatch, doc, deleteDoc } from 'firebase/firestore';
 import type { WorkoutDay } from '../types';
 import { useAuth } from '../AuthContext';
-import { Plus, LogOut, Trash2, Dumbbell, Zap, Flame } from 'lucide-react';
+import { Plus, LogOut, Trash2, Dumbbell, LayoutGrid, Timer, BarChart3 } from 'lucide-react';
 import DayCard from './DayCard';
 import DayDetail from './DayDetail';
 
@@ -59,7 +59,7 @@ const Dashboard: React.FC = () => {
 
   const handleDeleteDay = async (e: React.MouseEvent, dayId: string) => {
     e.stopPropagation();
-    if (!user || !window.confirm("DELETE THIS ROUTINE PERMANENTLY?")) return;
+    if (!user || !window.confirm("CONFIRM DELETION?")) return;
 
     try {
       await deleteDoc(doc(db, `users/${user.uid}/workout_days/${dayId}`));
@@ -85,27 +85,27 @@ const Dashboard: React.FC = () => {
 
       const ppl = [
         {
-          title: 'PUSH: UPPER FOCUS',
+          title: 'PUSH / STRENGTH',
           exercises: [
-            { id: uuid(), name: 'BARBELL BENCH PRESS', sets: createSets(4, 80, 8) },
-            { id: uuid(), name: 'MILITARY PRESS', sets: createSets(3, 50, 10) },
-            { id: uuid(), name: 'DUMBBELL LATERAL RAISES', sets: createSets(4, 12, 12) },
+            { id: uuid(), name: 'FLAT BENCH PRESS', sets: createSets(4, 100, 5) },
+            { id: uuid(), name: 'SHOULDER PRESS', sets: createSets(3, 60, 8) },
+            { id: uuid(), name: 'TRICEP DIPS', sets: createSets(3, 20, 10) },
           ]
         },
         {
-          title: 'PULL: BACK & BI',
+          title: 'PULL / HYPERTROPHY',
           exercises: [
-            { id: uuid(), name: 'PULL-UPS (WEIGHTED)', sets: createSets(3, 15, 10) },
-            { id: uuid(), name: 'BARBELL DEADLIFTS', sets: createSets(3, 140, 5) },
-            { id: uuid(), name: 'BARBELL CURLS', sets: createSets(3, 30, 12) },
+            { id: uuid(), name: 'LAT PULLDOWN', sets: createSets(4, 70, 12) },
+            { id: uuid(), name: 'SEATED ROWS', sets: createSets(3, 65, 12) },
+            { id: uuid(), name: 'FACE PULLS', sets: createSets(3, 20, 15) },
           ]
         },
         {
-          title: 'LEGS: MASS BUILDER',
+          title: 'LEGS / VOLUME',
           exercises: [
-            { id: uuid(), name: 'BARBELL SQUATS', sets: createSets(4, 100, 8) },
-            { id: uuid(), name: 'LEG PRESS 45°', sets: createSets(3, 200, 12) },
-            { id: uuid(), name: 'STANDING CALF RAISES', sets: createSets(4, 60, 15) },
+            { id: uuid(), name: 'BACK SQUAT', sets: createSets(5, 120, 5) },
+            { id: uuid(), name: 'LEG PRESS', sets: createSets(3, 250, 12) },
+            { id: uuid(), name: 'CALF RAISES', sets: createSets(4, 80, 15) },
           ]
         }
       ];
@@ -128,111 +128,117 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-10 animate-fade-in relative z-10 font-['Barlow_Condensed']">
-      {/* Background Silhouette Pattern */}
-      <div className="fixed inset-0 -z-10 opacity-[0.02] pointer-events-none flex items-center justify-center">
-        <Dumbbell className="w-[80vw] h-[80vw] rotate-12" />
-      </div>
-
-      <header className="max-w-6xl mx-auto mb-16 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <div className="w-14 h-14 bg-energy flex items-center justify-center text-black">
-            <Flame className="w-8 h-8 fill-black" />
-          </div>
-          <div>
-            <h1 className="heading-power text-3xl tracking-tighter text-white">IRON COMMAND <span className="text-energy/50">X</span></h1>
-            <div className="flex items-center gap-2 mt-[-2px]">
-              <span className="text-[11px] font-black uppercase tracking-[0.3em] text-white/30">ELITE PERFORMANCE TRACKER</span>
-            </div>
-          </div>
-        </div>
+    <div className="min-h-screen p-6 md:p-12 lg:p-20 flex flex-col items-center">
+      <div className="w-full max-w-7xl animate-fade-in flex flex-col gap-12 md:gap-20">
         
-        <button 
-          onClick={() => auth.signOut()}
-          className="w-12 h-12 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all text-white/30 hover:text-red-500"
-        >
-          <LogOut className="w-5 h-5" />
-        </button>
-      </header>
-
-      <main className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
-          <div className="space-y-1">
-            <h2 className="heading-power text-4xl flex items-center gap-4 text-white">
-              <Dumbbell className="w-8 h-8 text-energy" />
-              ROUTINE CLUSTER
-            </h2>
-            <p className="text-sm font-bold text-white/20 uppercase tracking-widest">Select target operational module.</p>
+        {/* Navigation / Brand Header */}
+        <header className="flex items-center justify-between border-b border-white/5 pb-8">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-primary flex items-center justify-center">
+              <BarChart3 className="w-6 h-6 text-black" />
+            </div>
+            <h1 className="heading-athletic text-4xl tracking-tight text-white">PERFORMANCE <span className="text-white/40">CORE</span></h1>
           </div>
           
-          <div className="flex flex-wrap items-center gap-4">
+          <div className="flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-3">
+              <span className="status-dot active" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary">LIVE ENGINE</span>
+            </div>
             <button 
-              onClick={() => setIsAdding(true)}
-              className="glass-button-primary py-3 px-8 text-sm"
+              onClick={() => auth.signOut()}
+              className="w-10 h-10 flex items-center justify-center text-white/20 hover:text-primary transition-colors"
             >
-              <Plus className="w-5 h-5 mr-[-4px]" />
-              NEW TRAINING
+              <LogOut className="w-5 h-5" />
             </button>
           </div>
-        </div>
+        </header>
+
+        {/* Dashboard Title & Actions */}
+        <section className="flex flex-col md:flex-row md:items-end justify-between gap-8">
+          <div className="space-y-4">
+            <h2 className="heading-athletic text-7xl md:text-8xl lg:text-9xl text-white">ACTIVE<br/>RETIREMENT</h2>
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2 text-xs font-bold text-white/20 tracking-widest uppercase">
+                <Timer className="w-4 h-4" />
+                Session duration: 45m
+              </div>
+              <div className="flex items-center gap-2 text-xs font-bold text-white/20 tracking-widest uppercase">
+                <LayoutGrid className="w-4 h-4 text-primary" />
+                Active modules: {days.length}
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button 
+              onClick={() => setIsAdding(true)}
+              className="btn-blaze"
+            >
+              <Plus className="w-4 h-4" />
+              CREATE MODULE
+            </button>
+          </div>
+        </section>
 
         {isAdding && (
-          <form onSubmit={handleAddDay} className="glass-card mb-12 animate-slide-up bg-white/[0.01] border-energy/10 p-1">
-            <div className="p-10 space-y-6">
-              <div className="space-y-3">
-                <label className="heading-power text-xs tracking-widest text-energy block">INITIALIZE MODULE IDENTITY</label>
+          <form onSubmit={handleAddDay} className="performance-card p-12 animate-slide-up">
+            <div className="flex flex-col md:flex-row items-end gap-10">
+              <div className="flex-1 space-y-4 w-full">
+                <label className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Module Title</label>
                 <input 
-                  placeholder="E.G. TITAN UPPER BODY"
-                  className="input-rugged text-2xl h-16 font-black"
+                  placeholder="E.G. MAXIMUM PUSH"
+                  className="input-performance text-4xl heading-athletic"
                   value={newDayTitle}
                   onChange={e => setNewDayTitle(e.target.value)}
                   autoFocus
                 />
               </div>
-              <div className="flex gap-4 max-w-sm">
-                <button type="button" onClick={() => setIsAdding(false)} className="glass-button-secondary flex-1">CANCEL</button>
-                <button type="submit" disabled={actionLoading} className="glass-button-primary flex-1">
-                  {actionLoading ? 'DEPLOYING...' : 'INITIALIZE'}
+              <div className="flex gap-4 w-full md:w-auto">
+                <button type="button" onClick={() => setIsAdding(false)} className="btn-outline flex-1 md:w-40">CANCEL</button>
+                <button type="submit" disabled={actionLoading} className="btn-blaze flex-1 md:w-40">
+                  {actionLoading ? 'PENDING...' : 'INITIATE'}
                 </button>
               </div>
             </div>
           </form>
         )}
 
-        {days.length === 0 && !loading ? (
-          <div className="py-32 flex flex-col items-center justify-center glass-card border-dashed bg-white/[0.01] border-white/5">
-            <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center mb-8 border border-white/5">
-              <Zap className="w-10 h-10 text-white/10" />
+        {/* Training Grid */}
+        <section>
+          {days.length === 0 && !loading ? (
+            <div className="py-40 flex flex-col items-center justify-center performance-card bg-transparent border-dashed">
+              <div className="w-24 h-24 bg-white/5 flex items-center justify-center mb-10">
+                <Dumbbell className="w-10 h-10 text-white/20" />
+              </div>
+              <h3 className="heading-athletic text-4xl text-white/40 mb-10">NO MODULES DETECTED</h3>
+              <button onClick={handleAutoFillPPL} className="btn-blaze px-16">
+                AUTO-DECODE ELITE PPL
+              </button>
             </div>
-            <h3 className="heading-power text-2xl text-white/40 tracking-widest">TERMINAL EMPTY</h3>
-            <p className="text-sm font-bold text-white/20 mt-4 max-w-xs text-center uppercase tracking-widest">Initialize performance cluster or deploy PPL template.</p>
-            <button onClick={handleAutoFillPPL} className="mt-10 glass-button-primary px-12">
-              DEPLOY ELITE PPL
-            </button>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {loading ? (
-              Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="glass-card h-48 animate-pulse border-white/5" />
-              ))
-            ) : (
-              days.map((day) => (
-                <div key={day.id} className="relative group animate-slide-up" style={{ animationDelay: `${days.indexOf(day) * 50}ms` }}>
-                  <DayCard day={day} onClick={() => setSelectedDay(day)} />
-                  <button 
-                    onClick={(e) => handleDeleteDay(e, day.id)}
-                    className="absolute top-6 right-6 p-2 rounded-lg text-white/0 group-hover:text-white/20 hover:text-red-500 transition-all z-20"
-                    title="TERMINATE"
-                  >
-                    <Trash2 className="w-5 h-5" />
-                  </button>
-                </div>
-              ))
-            )}
-          </div>
-        )}
-      </main>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 w-full bg-white/5">
+              {loading ? (
+                Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="bg-surface h-80 animate-pulse" />
+                ))
+              ) : (
+                days.map((day) => (
+                  <div key={day.id} className="relative group animate-slide-up bg-surface p-12 overflow-hidden" style={{ animationDelay: `${days.indexOf(day) * 50}ms` }}>
+                    <DayCard day={day} onClick={() => setSelectedDay(day)} />
+                    <button 
+                      onClick={(e) => handleDeleteDay(e, day.id)}
+                      className="absolute bottom-12 right-12 p-3 text-white/0 group-hover:text-white/20 hover:text-primary transition-all z-20"
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </section>
+      </div>
 
       {selectedDay && (
         <DayDetail day={selectedDay} onClose={() => setSelectedDay(null)} />
