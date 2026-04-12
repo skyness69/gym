@@ -55,11 +55,6 @@ const RestTimer: React.FC<RestTimerProps> = ({ duration, onClose }) => {
           </div>
         </div>
 
-        <div className="space-y-1">
-          <h4 className="heading-athletic text-2xl text-white tracking-widest leading-none">RECOVERY_MODE</h4>
-          <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.2em]">Telemetry sync in progress...</p>
-        </div>
-
         <div className="flex items-center gap-3 pl-8 border-l border-white/5">
           <button 
             onClick={() => setTimeLeft(duration)} 
