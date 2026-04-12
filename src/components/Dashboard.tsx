@@ -146,7 +146,7 @@ const Dashboard: React.FC = () => {
             <div className="w-8 h-8 bg-primary flex items-center justify-center">
               <BarChart3 className="w-5 h-5 text-black" />
             </div>
-            <h1 className="heading-athletic text-4xl tracking-widest text-white leading-none mt-1.5">RAW</h1>
+            <h1 className="heading-athletic text-4xl tracking-widest text-white leading-none mt-1.5">GYM <span className="text-white/30 truncate">ZONE</span></h1>
           </div>
           
           <div className="flex items-center gap-4">
