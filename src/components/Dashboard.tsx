@@ -243,21 +243,6 @@ const Dashboard: React.FC = () => {
         )}
       </main>
 
-      {/* Floating Footer Stats */}
-      <footer className="fixed bottom-0 left-0 w-full p-6 flex justify-center pointer-events-none">
-        <div className="glass-card px-8 py-3 flex items-center gap-10 bg-black/80 backdrop-blur-3xl border-white/10 pointer-events-auto">
-          <div className="flex items-center gap-3">
-            <div className="w-2 h-2 rounded-full bg-energy animate-pulse-glow" />
-            <span className="heading-power text-xs tracking-widest text-white/60">SYSTEM ACTIVE</span>
-          </div>
-          <div className="w-[1px] h-4 bg-white/10" />
-          <div className="flex items-center gap-4">
-            <span className="text-[10px] font-black text-white/20 uppercase tracking-widest">DATA CLUSTERS</span>
-            <span className="mono-data text-energy font-bold text-lg">{String(days.length).padStart(2, '0')}</span>
-          </div>
-        </div>
-      </footer>
-
       {selectedDay && (
         <DayDetail day={selectedDay} onClose={() => setSelectedDay(null)} />
       )}
