@@ -3,7 +3,7 @@ import { db, auth } from '../firebase';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeBatch, doc, deleteDoc } from 'firebase/firestore';
 import type { WorkoutDay } from '../types';
 import { useAuth } from '../AuthContext';
-import { Plus, LogOut, Sparkles, ClipboardCheck, Trash2, LayoutGrid, Zap } from 'lucide-react';
+import { Plus, LogOut, ClipboardCheck, Trash2, Dumbbell, Zap, Flame } from 'lucide-react';
 import DayCard from './DayCard';
 import DayDetail from './DayDetail';
 import WorkoutForm from './WorkoutForm';
@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
     try {
       await addDoc(collection(db, `users/${user.uid}/workout_days`), {
         userId: user.uid,
-        title: newDayTitle,
+        title: newDayTitle.toUpperCase(),
         exercises: [],
         createdAt: serverTimestamp()
       });
@@ -61,7 +61,7 @@ const Dashboard: React.FC = () => {
 
   const handleDeleteDay = async (e: React.MouseEvent, dayId: string) => {
     e.stopPropagation();
-    if (!user || !window.confirm("Confirm routine termination?")) return;
+    if (!user || !window.confirm("DELETE THIS ROUTINE PERMANENTLY?")) return;
 
     try {
       await deleteDoc(doc(db, `users/${user.uid}/workout_days/${dayId}`));
@@ -87,27 +87,27 @@ const Dashboard: React.FC = () => {
 
       const ppl = [
         {
-          title: 'Hypertrophy Push',
+          title: 'PUSH: UPPER FOCUS',
           exercises: [
-            { id: uuid(), name: 'Incline Bench Press', sets: createSets(3, 60, 10) },
-            { id: uuid(), name: 'Overhead Press', sets: createSets(3, 40, 10) },
-            { id: uuid(), name: 'Lateral Raises', sets: createSets(3, 8, 15) },
+            { id: uuid(), name: 'BARBELL BENCH PRESS', sets: createSets(4, 80, 8) },
+            { id: uuid(), name: 'MILITARY PRESS', sets: createSets(3, 50, 10) },
+            { id: uuid(), name: 'DUMBBELL LATERAL RAISES', sets: createSets(4, 12, 12) },
           ]
         },
         {
-          title: 'Hypertrophy Pull',
+          title: 'PULL: BACK & BI',
           exercises: [
-            { id: uuid(), name: 'Weighted Pull-ups', sets: createSets(3, 10, 8) },
-            { id: uuid(), name: 'Barbell Rows', sets: createSets(3, 50, 10) },
-            { id: uuid(), name: 'Face Pulls', sets: createSets(3, 15, 15) },
+            { id: uuid(), name: 'PULL-UPS (WEIGHTED)', sets: createSets(3, 15, 10) },
+            { id: uuid(), name: 'BARBELL DEADLIFTS', sets: createSets(3, 140, 5) },
+            { id: uuid(), name: 'BARBELL CURLS', sets: createSets(3, 30, 12) },
           ]
         },
         {
-          title: 'Hypertrophy Legs',
+          title: 'LEGS: MASS BUILDER',
           exercises: [
-            { id: uuid(), name: 'Back Squats', sets: createSets(3, 70, 8) },
-            { id: uuid(), name: 'Romanian Deadlifts', sets: createSets(3, 80, 10) },
-            { id: uuid(), name: 'Leg Extensions', sets: createSets(3, 40, 12) },
+            { id: uuid(), name: 'BARBELL SQUATS', sets: createSets(4, 100, 8) },
+            { id: uuid(), name: 'LEG PRESS 45°', sets: createSets(3, 200, 12) },
+            { id: uuid(), name: 'STANDING CALF RAISES', sets: createSets(4, 60, 15) },
           ]
         }
       ];
@@ -130,72 +130,78 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-10 animate-fade-in relative z-10">
-      <header className="max-w-5xl mx-auto mb-16 flex items-center justify-between">
-        <div className="flex items-center gap-5">
-          <div className="w-11 h-11 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
-            <Zap className="w-5 h-5 text-cyan-400 fill-cyan-400/20" />
+    <div className="min-h-screen p-4 md:p-10 animate-fade-in relative z-10 font-['Barlow_Condensed']">
+      {/* Background Silhouette Pattern */}
+      <div className="fixed inset-0 -z-10 opacity-[0.02] pointer-events-none flex items-center justify-center">
+        <Dumbbell className="w-[80vw] h-[80vw] rotate-12" />
+      </div>
+
+      <header className="max-w-6xl mx-auto mb-16 flex items-center justify-between">
+        <div className="flex items-center gap-6">
+          <div className="w-14 h-14 bg-energy flex items-center justify-center text-black">
+            <Flame className="w-8 h-8 fill-black" />
           </div>
           <div>
-            <h1 className="text-xl font-extrabold tracking-tight text-white/90">AuraLift <span className="text-white/20 font-light">OS</span></h1>
-            <div className="flex items-center gap-2 mt-0.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-              <span className="text-[10px] font-bold uppercase tracking-widest text-white/30">System Nominal</span>
+            <h1 className="heading-power text-3xl tracking-tighter text-white">IRON COMMAND <span className="text-energy/50">X</span></h1>
+            <div className="flex items-center gap-2 mt-[-2px]">
+              <span className="text-[11px] font-black uppercase tracking-[0.3em] text-white/30">ELITE PERFORMANCE TRACKER</span>
             </div>
           </div>
         </div>
         
         <button 
           onClick={() => auth.signOut()}
-          className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all text-white/40 hover:text-white"
+          className="w-12 h-12 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 transition-all text-white/30 hover:text-red-500"
         >
-          <LogOut className="w-4 h-4" />
+          <LogOut className="w-5 h-5" />
         </button>
       </header>
 
-      <main className="max-w-5xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+      <main className="max-w-6xl mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12">
           <div className="space-y-1">
-            <h2 className="text-2xl font-bold tracking-tight flex items-center gap-3">
-              <LayoutGrid className="w-5 h-5 text-purple-400/60" />
-              Core Architecture
+            <h2 className="heading-power text-4xl flex items-center gap-4 text-white">
+              <Dumbbell className="w-8 h-8 text-energy" />
+              ROUTINE CLUSTER
             </h2>
-            <p className="text-sm text-white/30">Initialize training sequence from active routines.</p>
+            <p className="text-sm font-bold text-white/20 uppercase tracking-widest">Select target operational module.</p>
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-4">
             <button 
               onClick={() => setIsLogging(true)}
-              className="glass-button-secondary px-6 text-sm"
+              className="glass-button-secondary py-3 px-8 text-sm"
             >
-              <ClipboardCheck className="w-4 h-4 text-cyan-400" />
-              Quick Log
+              <ClipboardCheck className="w-4 h-4 text-energy" />
+              LOG SESSION
             </button>
             <button 
               onClick={() => setIsAdding(true)}
-              className="glass-button-primary px-6 text-sm"
+              className="glass-button-primary py-3 px-8 text-sm"
             >
-              <Plus className="w-4 h-4" />
-              New Routine
+              <Plus className="w-5 h-5 mr-[-4px]" />
+              NEW TRAINING
             </button>
           </div>
         </div>
 
         {isAdding && (
-          <form onSubmit={handleAddDay} className="glass-card p-10 mb-12 animate-slide-up bg-white/[0.01] border-cyan-500/10">
-            <div className="max-w-md space-y-4">
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-cyan-400/60 block ml-1">Routine Identity</label>
-              <input 
-                placeholder="Enter routine title (e.g. Alpha Protocol)"
-                className="glass-input text-lg"
-                value={newDayTitle}
-                onChange={e => setNewDayTitle(e.target.value)}
-                autoFocus
-              />
-              <div className="flex gap-4 pt-2">
-                <button type="button" onClick={() => setIsAdding(false)} className="glass-button-secondary flex-1">Abort</button>
+          <form onSubmit={handleAddDay} className="glass-card mb-12 animate-slide-up bg-white/[0.01] border-energy/10 p-1">
+            <div className="p-10 space-y-6">
+              <div className="space-y-3">
+                <label className="heading-power text-xs tracking-widest text-energy block">INITIALIZE MODULE IDENTITY</label>
+                <input 
+                  placeholder="E.G. TITAN UPPER BODY"
+                  className="input-rugged text-2xl h-16 font-black"
+                  value={newDayTitle}
+                  onChange={e => setNewDayTitle(e.target.value)}
+                  autoFocus
+                />
+              </div>
+              <div className="flex gap-4 max-w-sm">
+                <button type="button" onClick={() => setIsAdding(false)} className="glass-button-secondary flex-1">CANCEL</button>
                 <button type="submit" disabled={actionLoading} className="glass-button-primary flex-1">
-                  {actionLoading ? 'Deploying...' : 'Initialize'}
+                  {actionLoading ? 'DEPLOYING...' : 'INITIALIZE'}
                 </button>
               </div>
             </div>
@@ -203,21 +209,21 @@ const Dashboard: React.FC = () => {
         )}
 
         {days.length === 0 && !loading ? (
-          <div className="py-24 flex flex-col items-center justify-center glass-card border-dashed bg-white/[0.01] border-white/5">
-            <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6">
-              <Sparkles className="w-8 h-8 text-white/10" />
+          <div className="py-32 flex flex-col items-center justify-center glass-card border-dashed bg-white/[0.01] border-white/5">
+            <div className="w-24 h-24 rounded-full bg-white/5 flex items-center justify-center mb-8 border border-white/5">
+              <Zap className="w-10 h-10 text-white/10" />
             </div>
-            <h3 className="text-xl font-bold text-white/50 tracking-tight">System Purged</h3>
-            <p className="text-sm text-white/20 mt-2 max-w-xs text-center">No routines detected in local cluster. Initialize PPL template for rapid deployment.</p>
-            <button onClick={handleAutoFillPPL} className="mt-8 glass-button-primary px-10">
-              Apply Hypertrophy PPL
+            <h3 className="heading-power text-2xl text-white/40 tracking-widest">TERMINAL EMPTY</h3>
+            <p className="text-sm font-bold text-white/20 mt-4 max-w-xs text-center uppercase tracking-widest">Initialize performance cluster or deploy PPL template.</p>
+            <button onClick={handleAutoFillPPL} className="mt-10 glass-button-primary px-12">
+              DEPLOY ELITE PPL
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {loading ? (
               Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="glass-card h-40 animate-pulse border-white/5" />
+                <div key={i} className="glass-card h-48 animate-pulse border-white/5" />
               ))
             ) : (
               days.map((day) => (
@@ -225,10 +231,10 @@ const Dashboard: React.FC = () => {
                   <DayCard day={day} onClick={() => setSelectedDay(day)} />
                   <button 
                     onClick={(e) => handleDeleteDay(e, day.id)}
-                    className="absolute top-4 right-14 p-2 rounded-xl text-white/0 group-hover:text-white/20 hover:text-red-500 transition-all z-20"
-                    title="Terminate Routine"
+                    className="absolute top-6 right-6 p-2 rounded-lg text-white/0 group-hover:text-white/20 hover:text-red-500 transition-all z-20"
+                    title="TERMINATE"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-5 h-5" />
                   </button>
                 </div>
               ))
@@ -236,6 +242,21 @@ const Dashboard: React.FC = () => {
           </div>
         )}
       </main>
+
+      {/* Floating Footer Stats */}
+      <footer className="fixed bottom-0 left-0 w-full p-6 flex justify-center pointer-events-none">
+        <div className="glass-card px-8 py-3 flex items-center gap-10 bg-black/80 backdrop-blur-3xl border-white/10 pointer-events-auto">
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 rounded-full bg-energy animate-pulse-glow" />
+            <span className="heading-power text-xs tracking-widest text-white/60">SYSTEM ACTIVE</span>
+          </div>
+          <div className="w-[1px] h-4 bg-white/10" />
+          <div className="flex items-center gap-4">
+            <span className="text-[10px] font-black text-white/20 uppercase tracking-widest">DATA CLUSTERS</span>
+            <span className="mono-data text-energy font-bold text-lg">{String(days.length).padStart(2, '0')}</span>
+          </div>
+        </div>
+      </footer>
 
       {selectedDay && (
         <DayDetail day={selectedDay} onClose={() => setSelectedDay(null)} />

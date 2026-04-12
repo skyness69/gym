@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { auth, googleProvider } from '../firebase';
 import { signInWithPopup } from 'firebase/auth';
-import { Zap, Shield, Globe } from 'lucide-react';
+import { ShieldAlert, Zap, Globe, Dumbbell, Flame } from 'lucide-react';
 
 const Auth: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -20,63 +20,66 @@ const Auth: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen relative flex flex-col items-center justify-center p-6 overflow-hidden bg-[#050505]">
-      {/* Dynamic Background Orbital Glows */}
-      <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-cyan-500/10 blur-[150px] rounded-full animate-pulse" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-purple-500/10 blur-[150px] rounded-full animate-pulse" style={{ animationDelay: '1s' }} />
+    <div className="min-h-screen relative flex flex-col items-center justify-center p-6 overflow-hidden bg-[#050505] font-['Barlow_Condensed']">
+      {/* Heavy Industrial Background Pattern */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.03] select-none flex items-center justify-center">
+        <Dumbbell className="w-[120vw] h-[120vw] rotate-[30deg]" />
+      </div>
 
       <div className="w-full max-w-md relative z-10 space-y-12">
         {/* Branding Cluster */}
-        <div className="text-center space-y-6 animate-fade-in">
-          <div className="inline-flex items-center justify-center w-24 h-24 rounded-[32px] bg-white/[0.02] border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] relative group cursor-default">
-            <Zap className="w-12 h-12 text-cyan-400 fill-cyan-400/20 group-hover:scale-110 transition-transform duration-700" />
-            <div className="absolute inset-0 rounded-[32px] border border-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+        <div className="text-center space-y-8 animate-fade-in">
+          <div className="inline-flex items-center justify-center w-28 h-28 bg-energy shadow-[0_0_60px_rgba(34,197,94,0.3)] relative group cursor-default clip-path-polygon-[25%_0%,75%_0%,100%_50%,75%_100%,25%_100%,0%_50%]">
+            <Flame className="w-14 h-14 text-black fill-black" />
           </div>
           
           <div className="space-y-2">
-            <h1 className="text-5xl font-black tracking-tighter text-white">
-              AuraLift <span className="text-white/20 font-light">OS</span>
+            <h1 className="heading-power text-6xl tracking-tighter text-white">
+              IRON COMMAND <span className="text-energy">X</span>
             </h1>
-            <p className="text-[10px] font-bold uppercase tracking-[0.5em] text-white/20">Nexus Training Terminal v2.0</p>
+            <p className="text-[11px] font-black uppercase tracking-[0.6em] text-white/20">Elite Performance Protocol v3.0</p>
           </div>
         </div>
 
         {/* Auth Command Center */}
-        <div className="glass-card p-12 space-y-10 border-white/5 bg-white/[0.01] animate-slide-up">
-          <div className="text-center space-y-2">
-            <h2 className="text-sm font-bold text-white/60 uppercase tracking-[0.2em]">Authentication Required</h2>
-            <p className="text-[10px] text-white/20 uppercase tracking-widest">Initialize neural link to access your routines</p>
+        <div className="glass-card p-12 space-y-12 border-2 border-white/5 bg-white/[0.01] animate-slide-up relative overflow-hidden">
+          {/* Top warning line */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-energy/50 to-transparent" />
+
+          <div className="text-center space-y-3">
+            <h2 className="heading-power text-lg text-white/80 tracking-widest uppercase">Personnel Validation</h2>
+            <p className="text-[10px] font-bold text-white/10 uppercase tracking-[0.3em]">Initialize mission-critical metrics logging</p>
           </div>
 
           <button 
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="w-full glass-button-primary py-6 flex items-center justify-center gap-5 group relative overflow-hidden"
+            className="w-full glass-button-primary py-7 flex items-center justify-center gap-6 group relative overflow-hidden text-sm"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-            <Globe className="w-6 h-6 text-white group-hover:rotate-12 transition-transform" />
-            <span className="text-[11px] font-black uppercase tracking-[0.3em]">Authorize with Google</span>
+            <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+            <Globe className="w-6 h-6 text-black" />
+            <span className="heading-power tracking-[0.3em]">AUTHORIZE WITH GOOGLE</span>
           </button>
 
           {error && (
-            <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20 flex items-center gap-3 animate-slide-up">
-              <div className="w-1.5 h-1.5 rounded-full bg-red-500" />
-              <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest leading-relaxed">System Error: {error}</p>
+            <div className="p-5 rounded-lg bg-red-500/5 border border-red-500/20 flex items-center gap-4 animate-slide-up">
+              <ShieldAlert className="w-5 h-5 text-red-500" />
+              <p className="text-[10px] font-black text-red-400 uppercase tracking-widest leading-relaxed">Auth Breach: {error}</p>
             </div>
           )}
 
-          <div className="pt-4 flex flex-col items-center gap-4">
+          <div className="pt-6 flex flex-col items-center gap-6">
             <div className="flex items-center gap-6 opacity-20">
-              <Shield className="w-4 h-4" />
-              <div className="w-[1px] h-3 bg-white/40" />
-              <span className="text-[9px] font-bold uppercase tracking-[0.3em]">Encrypted Handshake</span>
+              <Zap className="w-4 h-4 text-energy" />
+              <div className="w-[1px] h-4 bg-white/40" />
+              <span className="text-[10px] font-black uppercase tracking-[0.4em]">Encrypted Channel</span>
             </div>
           </div>
         </div>
 
         {/* Global Footer */}
-        <div className="text-center opacity-10">
-          <p className="text-[8px] font-black uppercase tracking-[0.5em]">Quantum Secured Deployment</p>
+        <div className="text-center opacity-5">
+          <p className="text-[9px] font-black uppercase tracking-[0.8em]">Built for the 1%</p>
         </div>
       </div>
     </div>

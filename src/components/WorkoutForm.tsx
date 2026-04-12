@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useAuth } from '../AuthContext';
-import { X, Plus, Zap, Info, Trash2 } from 'lucide-react';
+import { X, Plus, Trash2, ShieldAlert, Activity } from 'lucide-react';
 
 interface WorkoutFormProps {
   onClose: () => void;
@@ -36,7 +36,7 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onClose, onSuccess }) => {
         date: serverTimestamp(),
         exercises: exercises.map((ex) => ({
           id: uuid(),
-          name: ex.name,
+          name: ex.name.toUpperCase(),
           sets: Array.from({ length: ex.sets || 0 }).map(() => ({
             id: uuid(),
             weight: Number(ex.weight || 0),
@@ -71,88 +71,86 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onClose, onSuccess }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 animate-fade-in overflow-hidden">
-      <div className="absolute inset-0 bg-[#050505]/80 backdrop-blur-2xl" onClick={onClose} />
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 animate-fade-in overflow-hidden font-['Barlow_Condensed']">
+      <div className="absolute inset-0 bg-black/90 backdrop-blur-xl" onClick={onClose} />
       
-      <div className="glass-card w-full max-w-2xl bg-[#0a0a0a]/90 border-white/5 flex flex-col max-h-[90vh] shadow-[0_0_100px_rgba(0,0,0,0.8)] relative z-10 animate-scale">
-        <header className="px-8 py-8 border-b border-white/5 flex items-center justify-between">
-          <div className="flex items-center gap-5">
-            <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-cyan-400 border border-cyan-500/10">
-              <Zap className="w-6 h-6 fill-cyan-400/10" />
+      <div className="glass-card w-full max-w-2xl bg-[#0a0a0a] border-2 border-white/5 flex flex-col max-h-[90vh] shadow-[0_0_100px_rgba(0,0,0,0.9)] relative z-10 animate-slide-up overflow-hidden">
+        <header className="px-10 py-10 border-b-2 border-white/5 flex items-center justify-between bg-white/[0.01]">
+          <div className="flex items-center gap-6">
+            <div className="w-12 h-12 bg-energy flex items-center justify-center text-black">
+              <Activity className="w-7 h-7" />
             </div>
             <div>
-              <h2 className="text-xl font-black text-white uppercase tracking-tight">Rapid Sync</h2>
-              <p className="text-[10px] font-bold text-white/20 uppercase tracking-[0.3em]">Manual Data Ingestion</p>
+              <h2 className="heading-power text-3xl tracking-tighter text-white">RAPID DATA INGESTION</h2>
+              <p className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">Direct Performance Telemetry</p>
             </div>
           </div>
-          <button onClick={onClose} className="w-10 h-10 rounded-xl hover:bg-white/5 flex items-center justify-center text-white/20 hover:text-white transition-all">
-            <X className="w-5 h-5" />
+          <button onClick={onClose} className="w-12 h-12 rounded-lg hover:bg-white/5 flex items-center justify-center text-white/20 hover:text-red-500 transition-all">
+            <X className="w-6 h-6" />
           </button>
         </header>
 
-        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-8 space-y-8 scrollbar-hide">
-          <div className="p-4 rounded-xl bg-cyan-500/5 border border-cyan-500/10 flex items-start gap-4">
-            <Info className="w-4 h-4 text-cyan-500 mt-1 shrink-0" />
-            <p className="text-[10px] font-bold text-cyan-500/60 uppercase leading-relaxed tracking-widest">
-              Direct telemetry input: Sets will be automatically marked as complete upon submission.
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-10 space-y-10 scrollbar-hide">
+          <div className="p-5 rounded-lg bg-energy/5 border border-energy/20 flex items-start gap-5">
+            <ShieldAlert className="w-5 h-5 text-energy mt-1 shrink-0" />
+            <p className="text-[11px] font-black text-energy/80 uppercase leading-relaxed tracking-widest">
+              Critical: Operational nodes will be marked as 100% complete upon cluster injection.
             </p>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-10">
             {exercises.map((ex, index) => (
-              <div key={index} className="p-6 rounded-[24px] bg-white/[0.02] border border-white/5 space-y-6 relative group overflow-hidden">
+              <div key={index} className="p-8 rounded-xl bg-white/[0.02] border border-white/5 space-y-8 relative group">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-lg bg-white/5 flex items-center justify-center text-[10px] font-black text-white/30 mono-data">
-                      {String(index + 1).padStart(2, '0')}
-                    </div>
-                    <span className="text-[10px] font-black text-white/20 uppercase tracking-widest">Target Movement</span>
+                  <div className="flex items-center gap-4">
+                    <span className="mono-data text-xs font-black text-energy">ENTRY_{String(index + 1).padStart(2, '0')}</span>
+                    <span className="text-[10px] font-black text-white/10 uppercase tracking-widest">Movement node</span>
                   </div>
                   {exercises.length > 1 && (
                     <button type="button" onClick={() => removeExercise(index)} className="text-white/10 hover:text-red-500 transition-colors">
-                      <Trash2 className="w-4 h-4" />
+                      <Trash2 className="w-5 h-5" />
                     </button>
                   )}
                 </div>
 
-                <div className="space-y-5">
-                  <input
-                    placeholder="MOVEMENT NAME (E.G. DEADLIFT)"
-                    className="glass-input text-lg font-bold uppercase tracking-tight h-14"
-                    value={ex.name}
-                    onChange={(e) => updateExercise(index, 'name', e.target.value)}
-                    required
-                  />
+                <div className="space-y-8">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-white/20 uppercase tracking-widest ml-1">MOVEMENT IDENTITY</label>
+                    <input
+                      placeholder="E.G. BARBELL SQUAT"
+                      className="input-rugged text-xl h-14 font-black"
+                      value={ex.name}
+                      onChange={(e) => updateExercise(index, 'name', e.target.value)}
+                      required
+                    />
+                  </div>
                   
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-3 gap-6">
                     <div className="space-y-2">
-                      <label className="text-[9px] font-black text-white/20 uppercase tracking-widest ml-1">Mass (KG)</label>
+                      <label className="text-[10px] font-black text-white/20 uppercase tracking-widest ml-1">MASS (KG)</label>
                       <input
                         type="number"
-                        placeholder="00"
-                        className="glass-input h-12 text-center text-cyan-400"
+                        className="input-rugged h-14 text-center text-energy text-2xl"
                         value={ex.weight || ''}
                         onChange={(e) => updateExercise(index, 'weight', parseFloat(e.target.value))}
                         required
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[9px] font-black text-white/20 uppercase tracking-widest ml-1">Freq (Reps)</label>
+                      <label className="text-[10px] font-black text-white/20 uppercase tracking-widest ml-1">REPS</label>
                       <input
                         type="number"
-                        placeholder="00"
-                        className="glass-input h-12 text-center"
+                        className="input-rugged h-14 text-center text-2xl"
                         value={ex.reps || ''}
                         onChange={(e) => updateExercise(index, 'reps', parseInt(e.target.value))}
                         required
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[9px] font-black text-white/20 uppercase tracking-widest ml-1">Units (Sets)</label>
+                      <label className="text-[10px] font-black text-white/20 uppercase tracking-widest ml-1">UNITS</label>
                       <input
                         type="number"
-                        placeholder="03"
-                        className="glass-input h-12 text-center"
+                        className="input-rugged h-14 text-center text-2xl"
                         value={ex.sets || ''}
                         onChange={(e) => updateExercise(index, 'sets', parseInt(e.target.value))}
                         required
@@ -160,9 +158,6 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onClose, onSuccess }) => {
                     </div>
                   </div>
                 </div>
-                
-                {/* Scanner effect on hover */}
-                <div className="absolute left-0 bottom-0 w-full h-[1px] bg-cyan-500/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
               </div>
             ))}
           </div>
@@ -170,21 +165,21 @@ const WorkoutForm: React.FC<WorkoutFormProps> = ({ onClose, onSuccess }) => {
           <button
             type="button"
             onClick={addExercise}
-            className="w-full py-6 rounded-2xl border border-dashed border-white/5 flex items-center justify-center gap-3 text-white/20 hover:text-white/40 hover:bg-white/[0.01] hover:border-white/10 transition-all uppercase tracking-widest text-[10px] font-black"
+            className="w-full py-8 rounded-xl border-2 border-dashed border-white/5 flex items-center justify-center gap-4 text-white/10 hover:text-energy hover:bg-energy/5 hover:border-energy/20 transition-all heading-power text-sm tracking-widest"
           >
-            <Plus className="w-4 h-4" />
-            Append Telemetry Node
+            <Plus className="w-6 h-6" />
+            APPEND TELEMETRY NODE
           </button>
         </form>
 
-        <footer className="px-8 py-8 border-t border-white/5 bg-black/20 flex gap-4">
-          <button onClick={onClose} className="glass-button-secondary flex-1 font-black text-[10px] tracking-widest">ABORT</button>
+        <footer className="px-10 py-10 border-t-2 border-white/5 bg-black/40 flex gap-6">
+          <button onClick={onClose} className="glass-button-secondary flex-1 text-sm">ABORT MISSION</button>
           <button 
             onClick={handleSubmit} 
             disabled={isSubmitting} 
-            className="glass-button-primary flex-1 font-black text-[10px] tracking-widest"
+            className="glass-button-primary flex-1 text-sm"
           >
-            {isSubmitting ? 'TRANSMITTING...' : 'COMMIT TO CORE'}
+            {isSubmitting ? 'TRANSMITTING...' : 'COMMIT TO ARCHIVE'}
           </button>
         </footer>
       </div>

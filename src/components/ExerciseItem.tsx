@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Exercise, ExerciseSet } from '../types';
-import { Trash2, Plus, Circle, CheckCircle2, Hash } from 'lucide-react';
+import { Trash2, Plus, Circle, CheckCircle2, Hash, Activity } from 'lucide-react';
 
 interface ExerciseItemProps {
   exercise: Exercise;
@@ -13,7 +13,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
   const [localName, setLocalName] = useState(exercise.name);
 
   const handleNameSave = () => {
-    onUpdate({ ...exercise, name: localName });
+    onUpdate({ ...exercise, name: localName.toUpperCase() });
     setIsEditingName(false);
   };
 
@@ -41,130 +41,128 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
     onUpdate({ ...exercise, sets: newSets });
   };
 
+  const completedSets = exercise.sets?.filter(s => s.isCompleted).length || 0;
+  const totalSets = exercise.sets?.length || 0;
+  const progressPercent = totalSets > 0 ? (completedSets / totalSets) * 100 : 0;
+
   return (
-    <div className="glass-card p-6 md:p-10 space-y-8 bg-white/[0.01] border-white/5 relative overflow-hidden group">
+    <div className="glass-card p-8 md:p-12 space-y-10 bg-white/[0.01] border-white/5 relative overflow-hidden group border-l-4 border-l-white/10 hover:border-l-energy transition-all duration-500">
       {/* Exercise Header */}
-      <div className="flex items-center justify-between pb-6 border-b border-white/5">
-        <div className="flex items-center gap-5 flex-1">
-          <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/20 group-hover:text-cyan-400/60 group-hover:border-cyan-400/20 transition-all duration-500">
-            <Hash className="w-6 h-6" />
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 pb-10 border-b border-white/5">
+        <div className="flex items-center gap-8 flex-1">
+          <div className="w-16 h-16 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-white/10 group-hover:text-energy group-hover:bg-energy/5 group-hover:border-energy/20 transition-all duration-500">
+            <Activity className="w-8 h-8" />
           </div>
           
-          <div className="flex-1">
-            {isEditingName ? (
-              <input 
-                className="bg-transparent border-b border-cyan-500/50 underline-offset-8 outline-none text-2xl font-bold text-white w-full uppercase tracking-tight"
-                value={localName}
-                onChange={e => setLocalName(e.target.value)}
-                onBlur={handleNameSave}
-                onKeyDown={e => e.key === 'Enter' && handleNameSave()}
-                autoFocus
-              />
-            ) : (
-              <h4 
-                onClick={() => setIsEditingName(true)}
-                className="text-2xl font-black text-white/80 group-hover:text-white cursor-text transition-colors uppercase tracking-tight"
-              >
-                {exercise.name}
-              </h4>
-            )}
-            <div className="flex items-center gap-2 mt-1">
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/20">Operational Module</span>
-              <div className="w-1 h-1 rounded-full bg-white/5" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/10">v1.2</span>
+          <div className="flex-1 space-y-3">
+            <div className="flex items-center gap-4">
+              {isEditingName ? (
+                <input 
+                  className="bg-transparent border-b-2 border-energy outline-none text-4xl heading-power text-white w-full"
+                  value={localName}
+                  onChange={e => setLocalName(e.target.value)}
+                  onBlur={handleNameSave}
+                  onKeyDown={e => e.key === 'Enter' && handleNameSave()}
+                  autoFocus
+                />
+              ) : (
+                <h4 
+                  onClick={() => setIsEditingName(true)}
+                  className="text-4xl heading-power text-white/80 group-hover:text-white cursor-text transition-colors"
+                >
+                  {exercise.name}
+                </h4>
+              )}
+            </div>
+            
+            {/* Intensity Progress Bar */}
+            <div className="flex items-center gap-4">
+              <div className="h-1.5 w-48 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                <div 
+                  className="h-full bg-energy transition-all duration-700 shadow-[0_0_10px_rgba(34,197,94,0.5)]" 
+                  style={{ width: `${progressPercent}%` }} 
+                />
+              </div>
+              <span className="mono-data text-[11px] font-black text-white/20 uppercase tracking-widest">
+                INTENSITY: {completedSets}/{totalSets} SETS DEPLETE
+              </span>
             </div>
           </div>
         </div>
 
         <button 
           onClick={onRemove}
-          className="w-10 h-10 rounded-xl bg-red-500/5 text-red-500/0 group-hover:text-red-500/20 hover:text-red-500 hover:bg-red-500/10 transition-all flex items-center justify-center"
+          className="w-12 h-12 rounded-lg bg-red-500/5 text-red-500/10 group-hover:text-red-500/40 hover:text-red-500 hover:bg-red-500/10 transition-all flex items-center justify-center border border-transparent hover:border-red-500/20"
         >
-          <Trash2 className="w-4 h-4" />
+          <Trash2 className="w-5 h-5" />
         </button>
       </div>
 
       {/* Sets Command Container */}
-      <div className="space-y-4">
-        {/* Table Header (Desktop) */}
-        <div className="hidden md:grid grid-cols-[60px_1fr_1fr_80px_60px] gap-6 px-4 mb-2">
-          <div className="text-[9px] font-black uppercase tracking-[0.2em] text-white/10">Set</div>
-          <div className="text-[9px] font-black uppercase tracking-[0.2em] text-white/10">Mass (KG)</div>
-          <div className="text-[9px] font-black uppercase tracking-[0.2em] text-white/10">Frequency</div>
-          <div className="text-[9px] font-black uppercase tracking-[0.2em] text-white/10 text-center">Status</div>
-          <div></div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {(exercise.sets || []).map((set, index) => (
+          <div 
+            key={set.id} 
+            className={`p-6 rounded-xl border transition-all duration-500 flex flex-col justify-between h-40 relative group/set ${set.isCompleted ? 'bg-energy/5 border-energy/30' : 'bg-white/[0.01] border-white/5 hover:border-white/10'}`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="mono-data text-[10px] font-black text-white/20 uppercase tracking-[0.2em]">SEQUENCE {String(index + 1).padStart(2, '0')}</span>
+              <button 
+                onClick={() => handleUpdateSet(set.id, { isCompleted: !set.isCompleted })}
+                className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${set.isCompleted ? 'bg-energy text-black' : 'bg-white/5 text-white/10 hover:text-white/40 hover:bg-white/10'}`}
+              >
+                {set.isCompleted ? <CheckCircle2 className="w-5 h-5" /> : <Circle className="w-5 h-5" />}
+              </button>
+            </div>
 
-        {/* Sets List */}
-        <div className="space-y-3">
-          {(exercise.sets || []).map((set, index) => (
-            <div 
-              key={set.id} 
-              className={`grid grid-cols-1 md:grid-cols-[60px_1fr_1fr_80px_60px] gap-4 md:gap-6 items-center p-4 md:p-3 rounded-2xl transition-all duration-500 border ${set.isCompleted ? 'success-glow border-green-500/20' : 'bg-white/[0.01] border-white/5 hover:border-white/10'}`}
-            >
-              {/* Set Label */}
-              <div className="flex items-center justify-between md:justify-center">
-                <span className="md:hidden text-[10px] font-bold uppercase tracking-widest text-white/20">Sequence Index</span>
-                <span className="mono-data font-black text-white/20 group-hover:text-white/40">{String(index + 1).padStart(2, '0')}</span>
-              </div>
-
-              {/* Weight Input */}
-              <div className="relative">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-white/10">MASS (KG)</p>
                 <input 
                   type="number"
-                  className={`glass-input text-center text-lg h-12 md:h-10 ${set.isCompleted ? 'text-green-400/80 border-green-500/10' : ''}`}
+                  className="w-full bg-transparent heading-power text-3xl text-white outline-none"
                   value={set.weight || ''}
                   onChange={e => handleUpdateSet(set.id, { weight: Number(e.target.value) })}
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-white/10 uppercase md:hidden">Mass/KG</span>
               </div>
-
-              {/* Reps Input */}
-              <div className="relative">
+              <div className="space-y-1">
+                <p className="text-[9px] font-black uppercase tracking-widest text-white/10">REPS</p>
                 <input 
                   type="number"
-                  className={`glass-input text-center text-lg h-12 md:h-10 ${set.isCompleted ? 'text-green-400/80 border-green-500/10' : ''}`}
+                  className="w-full bg-transparent heading-power text-3xl text-white outline-none"
                   value={set.reps || ''}
                   onChange={e => handleUpdateSet(set.id, { reps: Number(e.target.value) })}
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-[10px] font-bold text-white/10 uppercase md:hidden">Reps</span>
-              </div>
-
-              {/* Completion Toggle */}
-              <div className="flex justify-center md:h-full">
-                <button 
-                  onClick={() => handleUpdateSet(set.id, { isCompleted: !set.isCompleted })}
-                  className={`w-full md:w-12 h-12 md:h-full rounded-xl flex items-center justify-center transition-all ${set.isCompleted ? 'text-green-400 bg-green-500/10' : 'text-white/5 bg-white/5 hover:text-white/20 hover:bg-white/10'}`}
-                >
-                  {set.isCompleted ? <CheckCircle2 className="w-5 h-5 shadow-[0_0_10px_rgba(34,197,94,0.4)]" /> : <Circle className="w-5 h-5" />}
-                </button>
-              </div>
-
-              {/* Remove Set */}
-              <div className="flex justify-center">
-                <button 
-                  onClick={() => removeSet(set.id)}
-                  className="w-full md:w-auto h-12 md:h-auto flex items-center justify-center text-white/5 hover:text-red-500 transition-colors"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
               </div>
             </div>
-          ))}
 
-          {/* Append Structure */}
-          <button 
-            onClick={addSet}
-            className="w-full py-5 rounded-2xl border border-dashed border-white/5 text-white/[0.03] hover:bg-white/[0.02] hover:border-cyan-500/20 hover:text-cyan-400/40 transition-all flex items-center justify-center gap-3 group/btn uppercase tracking-[0.3em] text-[9px] font-black"
-          >
-            <Plus className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-500" />
-            Append Set Structure
-          </button>
-        </div>
+            <button 
+              onClick={() => removeSet(set.id)}
+              className="absolute top-2 right-2 opacity-0 group-hover/set:opacity-100 p-1 text-white/10 hover:text-red-500 transition-all"
+            >
+              <Trash2 className="w-3 h-3" />
+            </button>
+            
+            {/* Set scanline */}
+            <div className="absolute bottom-0 left-0 h-[2px] bg-energy/20 w-0 group-hover/set:w-full transition-all duration-500" />
+          </div>
+        ))}
+
+        <button 
+          onClick={addSet}
+          className="h-40 p-6 rounded-xl border border-dashed border-white/5 bg-white/[0.01] hover:bg-white/[0.03] hover:border-energy/30 text-white/10 hover:text-energy flex flex-col items-center justify-center gap-4 transition-all duration-500 group/add"
+        >
+          <div className="w-10 h-10 rounded-lg border border-white/10 flex items-center justify-center group-hover/add:border-energy/20">
+            <Plus className="w-5 h-5" />
+          </div>
+          <span className="heading-power text-xs tracking-[0.2em]">APPEND SEQUENCE</span>
+        </button>
       </div>
       
-      {/* Absolute scanline effect */}
-      <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/[0.02] to-transparent h-[1px] top-0 group-hover:top-full transition-all duration-[2000ms] pointer-events-none" />
+      {/* Absolute industry scanline effect */}
+      <div className="absolute top-0 right-0 w-32 h-32 opacity-[0.02] pointer-events-none">
+        <Hash className="w-full h-full text-white" />
+      </div>
     </div>
   );
 };
