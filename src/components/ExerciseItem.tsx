@@ -140,7 +140,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
                     if (val < 0) val = Math.abs(val); // Prevent negative numbers
                     handleUpdateSet(set.id, { weight: val || 0 }); // Allow 0 temporarily while typing
                   }}
-                  onBlur={e => {
+                  onBlur={() => {
                     if (!set.weight || set.weight <= 0) {
                        handleUpdateSet(set.id, { weight: 1 }); // Enforce minimum of 1 if left empty or 0
                     }
