@@ -110,12 +110,20 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
           >
             <div className="flex items-center justify-between">
               <span className={`mono-data text-[7px] font-black uppercase tracking-[0.2em] ${set.isCompleted ? 'text-primary' : 'text-white/20'}`}>SET_{String(index + 1).padStart(2, '0')}</span>
-              <button 
-                onClick={() => handleUpdateSet(set.id, { isCompleted: !set.isCompleted })}
-                className={`w-7 h-7 flex items-center justify-center transition-all border ${set.isCompleted ? 'bg-primary border-primary text-black shadow-[0_0_10px_rgba(255,63,0,0.4)]' : 'bg-white/5 border-white/5 text-white/5 hover:border-primary/50'}`}
-              >
-                {set.isCompleted ? <CheckCircle2 className="w-4 h-4" /> : <Circle className="w-4 h-4" />}
-              </button>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => removeSet(set.id)}
+                  className="p-1 text-white/20 hover:text-red-500 transition-all"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+                <button 
+                  onClick={() => handleUpdateSet(set.id, { isCompleted: !set.isCompleted })}
+                  className={`w-7 h-7 flex items-center justify-center transition-all border ${set.isCompleted ? 'bg-primary border-primary text-black shadow-[0_0_10px_rgba(255,63,0,0.4)]' : 'bg-white/5 border-white/5 text-white/10 hover:border-primary/50'}`}
+                >
+                  {set.isCompleted ? <CheckCircle2 className="w-4 h-4" /> : <Circle className="w-4 h-4" />}
+                </button>
+              </div>
             </div>
 
             <div className="space-y-1">
@@ -129,13 +137,6 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
                 />
               </div>
             </div>
-
-            <button 
-              onClick={() => removeSet(set.id)}
-              className="absolute top-1 right-1 opacity-0 group-hover/set:opacity-100 p-1 text-white/5 hover:text-primary transition-all"
-            >
-              <Trash2 className="w-2.5 h-2.5" />
-            </button>
           </div>
         ))}
 
