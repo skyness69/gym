@@ -8,6 +8,7 @@ export interface ExerciseSet {
 export interface Exercise {
   id: string;
   name: string;
+  unit?: 'KG' | 'LB';
   sets: ExerciseSet[];
 }
 

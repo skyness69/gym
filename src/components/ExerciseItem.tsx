@@ -7,10 +7,9 @@ interface ExerciseItemProps {
   exercise: Exercise;
   onUpdate: (updated: Exercise) => void;
   onRemove: () => void;
-  unit: 'KG' | 'LB';
 }
 
-const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemove, unit }) => {
+const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemove }) => {
   const { showUndo } = useToast();
   const [isEditingName, setIsEditingName] = useState(false);
   const [localName, setLocalName] = useState(exercise.name);
@@ -63,6 +62,11 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
   const completedSets = exercise.sets?.filter(s => s.isCompleted).length || 0;
   const totalSets = exercise.sets?.length || 0;
   const progressPercent = totalSets > 0 ? (completedSets / totalSets) * 100 : 0;
+  
+  const unit = exercise.unit || 'KG';
+  const toggleUnit = () => {
+    onUpdate({ ...exercise, unit: unit === 'KG' ? 'LB' : 'KG' });
+  };
 
   return (
     <div className="space-y-6 group relative">
@@ -123,6 +127,13 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
               <RotateCcw className="w-4 h-4" />
             </button>
           )}
+          <button 
+            onClick={toggleUnit}
+            title="Toggle KG / LB"
+            className="w-8 h-8 flex items-center justify-center text-[10px] font-black tracking-widest text-white/40 hover:text-primary transition-all hover:bg-primary/5 rounded-sm"
+          >
+            {unit}
+          </button>
           <button 
             onClick={onRemove}
             title="Delete Exercise"
