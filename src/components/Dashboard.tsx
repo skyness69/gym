@@ -12,6 +12,7 @@ const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const { showUndo } = useToast();
   const [days, setDays] = useState<WorkoutDay[]>([]);
+  const [unit, setUnit] = useState<'KG' | 'LB'>(() => (localStorage.getItem('gymzone-unit') as 'KG' | 'LB') || 'KG');
   const [selectedDay, setSelectedDay] = useState<WorkoutDay | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
@@ -150,6 +151,16 @@ const Dashboard: React.FC = () => {
           </div>
           
           <div className="flex items-center gap-4">
+            <button 
+              onClick={() => {
+                const next = unit === 'KG' ? 'LB' : 'KG';
+                setUnit(next);
+                localStorage.setItem('gymzone-unit', next);
+              }}
+              className="h-8 px-3 rounded-sm border border-white/5 flex items-center justify-center text-[10px] font-black tracking-widest hover:border-primary hover:text-primary transition-colors text-white/50 bg-[#101114]"
+            >
+              {unit}
+            </button>
             <div className="hidden sm:flex items-center gap-2">
               <span className="status-dot active w-1.5 h-1.5" />
               <span className="text-[8px] font-black uppercase tracking-widest text-primary">ACTIVE LOG</span>
@@ -250,7 +261,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {selectedDay && (
-        <DayDetail day={selectedDay} onClose={() => setSelectedDay(null)} />
+        <DayDetail day={selectedDay} onClose={() => setSelectedDay(null)} unit={unit} />
       )}
 
       <footer className="mt-auto pt-16 pb-8 flex flex-col items-center justify-center gap-4 opacity-40 hover:opacity-100 transition-opacity w-full">

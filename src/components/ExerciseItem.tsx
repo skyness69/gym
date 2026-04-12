@@ -7,9 +7,10 @@ interface ExerciseItemProps {
   exercise: Exercise;
   onUpdate: (updated: Exercise) => void;
   onRemove: () => void;
+  unit: 'KG' | 'LB';
 }
 
-const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemove }) => {
+const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemove, unit }) => {
   const { showUndo } = useToast();
   const [isEditingName, setIsEditingName] = useState(false);
   const [localName, setLocalName] = useState(exercise.name);
@@ -158,7 +159,7 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
 
             <div className="space-y-1">
               <div className="flex flex-col items-center">
-                <p className={`text-[8px] font-black uppercase tracking-[0.1em] ${set.isCompleted ? 'text-primary/40' : 'text-white/10'}`}>LOAD_KG</p>
+                <p className={`text-[8px] font-black uppercase tracking-[0.1em] ${set.isCompleted ? 'text-primary/40' : 'text-white/10'}`}>LOAD_{unit}</p>
                 <input 
                   type="number"
                   min="1"

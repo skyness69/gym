@@ -9,9 +9,10 @@ import { useToast } from '../ToastContext';
 interface DayDetailProps {
   day: WorkoutDay;
   onClose: () => void;
+  unit: 'KG' | 'LB';
 }
 
-const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
+const DayDetail: React.FC<DayDetailProps> = ({ day, onClose, unit }) => {
   const { showUndo } = useToast();
   const [exercises, setExercises] = useState<Exercise[]>(day?.exercises || []);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -128,6 +129,7 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
                   exercise={ex} 
                   onUpdate={(updated) => handleUpdateExercise(updated)}
                   onRemove={() => removeExercise(ex.id)}
+                  unit={unit}
                 />
               </div>
             ))
