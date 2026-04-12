@@ -108,10 +108,10 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
             </div>
 
             <div className="space-y-2">
-              <p className="text-[7px] font-black uppercase tracking-[0.3em] text-white/30 italic">INTENSITY</p>
+              <p className="text-[7px] font-black uppercase tracking-[0.3em] text-white/30 italic">LIFETIME PR</p>
               <div className="flex items-center gap-1.5">
                 <Activity className="w-2.5 h-2.5 text-primary" />
-                <span className="heading-athletic text-sm text-white/60">MAX_EFFORT</span>
+                <span className="heading-athletic text-[14px] text-white/60 pt-1 leading-none">{exercise.prWeight ? `${exercise.prWeight} ${unit}` : 'NO DATA'}</span>
               </div>
             </div>
           </div>
@@ -151,7 +151,12 @@ const ExerciseItem: React.FC<ExerciseItemProps> = ({ exercise, onUpdate, onRemov
             className={`p-4 h-28 flex flex-col justify-between group/set border-t-2 performance-card ${set.isCompleted ? 'border-primary ring-1 ring-primary/20' : 'border-white/5 opacity-80 hover:opacity-100'}`}
           >
             <div className="flex items-center justify-between">
-              <span className={`mono-data text-[7px] font-black uppercase tracking-[0.2em] ${set.isCompleted ? 'text-primary' : 'text-white/20'}`}>SET_{String(index + 1).padStart(2, '0')}</span>
+              <div className="flex items-center gap-2">
+                <span className={`mono-data text-[7px] font-black uppercase tracking-[0.2em] ${set.isCompleted ? 'text-primary' : 'text-white/20'}`}>SET_{String(index + 1).padStart(2, '0')}</span>
+                {set.isCompleted && set.weight > (exercise.prWeight || 0) && (
+                  <span className="text-[6px] font-black uppercase tracking-widest text-[#ff3f00] bg-[#ff3f00]/10 px-1 py-0.5 rounded-sm animate-pulse shadow-[0_0_8px_rgba(255,63,0,0.5)]">PR!</span>
+                )}
+              </div>
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => removeSet(set.id)}

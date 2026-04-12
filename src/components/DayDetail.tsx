@@ -3,8 +3,9 @@ import type { WorkoutDay, Exercise } from '../types';
 import { Plus, ChevronLeft, Target } from 'lucide-react';
 import ExerciseItem from './ExerciseItem';
 import { db } from '../firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { useToast } from '../ToastContext';
+import { useAuth } from '../AuthContext';
 
 interface DayDetailProps {
   day: WorkoutDay;
@@ -12,6 +13,7 @@ interface DayDetailProps {
 }
 
 const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
+  const { user } = useAuth();
   const { showUndo } = useToast();
   const [exercises, setExercises] = useState<Exercise[]>(day?.exercises || []);
   const [isSyncing, setIsSyncing] = useState(false);
@@ -64,6 +66,48 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
       setExercises(restored);
       syncToFirebase(restored);
     });
+  };
+
+  const completeSession = async () => {
+    if (!user) return;
+    
+    let totalVol = 0;
+    const completedExercises = exercises.map(ex => {
+      const doneSets = ex.sets.filter(s => s.isCompleted);
+      doneSets.forEach(s => {
+        totalVol += Math.max(s.weight, 0) * (s.reps || 1);
+      });
+      return { ...ex, sets: doneSets };
+    }).filter(ex => ex.sets.length > 0);
+
+    if (completedExercises.length === 0) return;
+
+    try {
+      await addDoc(collection(db, `users/${user.uid}/workout_logs`), {
+        userId: user.uid,
+        dayTitle: day.title,
+        date: serverTimestamp(),
+        exercises: completedExercises,
+        totalVolume: totalVol
+      });
+
+      const resetExercises = exercises.map(ex => {
+        const doneSets = ex.sets.filter(s => s.isCompleted);
+        const maxWeight = Math.max(...doneSets.map(s => s.weight), 0);
+        return {
+          ...ex,
+          prWeight: maxWeight > (ex.prWeight || 0) ? maxWeight : ex.prWeight,
+          sets: ex.sets.map(s => ({ ...s, isCompleted: false }))
+        };
+      });
+
+      setExercises(resetExercises);
+      syncToFirebase(resetExercises);
+      showUndo(`SESSION LOGGED [ VOL: ${totalVol} ]`, () => {}); // Just a success toast
+      onClose();
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -143,6 +187,15 @@ const DayDetail: React.FC<DayDetailProps> = ({ day, onClose }) => {
           </div>
           <span className="heading-athletic text-xl tracking-widest">ADD MOVEMENT</span>
         </button>
+
+        {exercises.some(ex => ex.sets.some(s => s.isCompleted)) && (
+          <button
+            onClick={completeSession}
+            className="w-full py-6 mt-8 mb-20 bg-primary/10 text-primary border border-primary hover:bg-primary hover:text-black heading-athletic text-2xl tracking-widest transition-all duration-500 shadow-[0_0_20px_rgba(255,63,0,0.2)] hover:shadow-[0_0_40px_rgba(255,63,0,0.6)]"
+          >
+            COMPLETE SESSION
+          </button>
+        )}
         
         <div className="h-20" />
       </main>
