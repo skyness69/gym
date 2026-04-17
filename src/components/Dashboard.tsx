@@ -4,7 +4,7 @@ import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, writeB
 import type { WorkoutDay } from '../types';
 import { useAuth } from '../AuthContext';
 import { useToast } from '../ToastContext';
-import { Plus, LogOut, Trash2, Dumbbell, LayoutGrid, Timer, BarChart3 } from 'lucide-react';
+import { Plus, LogOut, Trash2, Dumbbell, LayoutGrid, Timer, BarChart3, RotateCcw } from 'lucide-react';
 import DayCard from './DayCard';
 import DayDetail from './DayDetail';
 
@@ -74,6 +74,28 @@ const Dashboard: React.FC = () => {
       });
     } catch (error) {
       console.error("Error deleting day:", error);
+    }
+  };
+
+  const handleUncheckAll = async () => {
+    if (!user || days.length === 0) return;
+    setActionLoading(true);
+    try {
+      const batch = writeBatch(db);
+      days.forEach(day => {
+        const updatedExercises = day.exercises?.map(ex => ({
+          ...ex,
+          sets: ex.sets?.map(s => ({ ...s, isCompleted: false })) ?? []
+        })) ?? [];
+        batch.update(doc(db, `users/${user.uid}/workout_days/${day.id}`), {
+          exercises: updatedExercises
+        });
+      });
+      await batch.commit();
+    } catch (error) {
+      console.error('Uncheck all error:', error);
+    } finally {
+      setActionLoading(false);
     }
   };
 
@@ -179,6 +201,17 @@ const Dashboard: React.FC = () => {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
+            {days.length > 0 && (
+              <button
+                onClick={handleUncheckAll}
+                disabled={actionLoading}
+                title="Reset all completed sets across every day"
+                className="btn-outline w-full sm:w-auto whitespace-nowrap flex items-center gap-2"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                UNCHECK ALL
+              </button>
+            )}
             <button 
               onClick={() => setIsAdding(true)}
               className="btn-blaze w-full sm:w-auto whitespace-nowrap"

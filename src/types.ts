@@ -1,3 +1,5 @@
+import type { Timestamp } from 'firebase/firestore';
+
 export interface ExerciseSet {
   id: string;
   weight: number;
@@ -17,13 +19,13 @@ export interface WorkoutDay {
   userId: string;
   title: string;
   exercises: Exercise[];
-  createdAt: any;
+  createdAt: Timestamp | null;
 }
 
 export interface WorkoutLog {
   id: string;
   userId: string;
-  date: any;
+  date: Timestamp | null;
   exercises: Exercise[];
   totalVolume: number;
 }
