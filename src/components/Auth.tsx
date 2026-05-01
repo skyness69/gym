@@ -6,7 +6,8 @@ import {
   createUserWithEmailAndPassword, 
   sendPasswordResetEmail 
 } from 'firebase/auth';
-import { Zap, BarChart3, Mail, Lock, UserPlus, LogIn, KeyRound } from 'lucide-react';
+import { Mail, Lock, LogIn, KeyRound, UserPlus, Chrome, Apple, Facebook } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type AuthMode = 'login' | 'register' | 'forgot';
 
@@ -45,8 +46,6 @@ const Auth: React.FC = () => {
       } else if (mode === 'forgot') {
         await sendPasswordResetEmail(auth, email);
         setMessage('Reset link sent to your email.');
-        // Optionally switch back to login after success
-        // setTimeout(() => setMode('login'), 3000);
       }
     } catch (err: any) {
       setError(err.message);
@@ -56,153 +55,202 @@ const Auth: React.FC = () => {
   };
 
   const labels = {
-    login: { title: 'ATHLETE_LOGIN', button: 'AUTHORIZE', link: 'NEW_ACCOUNT', icon: <LogIn className="w-5 h-5" /> },
-    register: { title: 'ATHLETE_ENROLL', button: 'REGISTER', link: 'EXISTING_MEMBER', icon: <UserPlus className="w-5 h-5" /> },
-    forgot: { title: 'RECOVERY_INIT', button: 'SEND_RESET', link: 'BACK_TO_LOGIN', icon: <KeyRound className="w-5 h-5" /> }
+    login: { 
+      title: 'Log In', 
+      button: 'Log In', 
+      toggle: 'New to GYM ZONE? Sign up', 
+      mode: 'register' as AuthMode,
+      icon: <LogIn className="w-6 h-6" /> 
+    },
+    register: { 
+      title: 'Sign Up', 
+      button: 'Register', 
+      toggle: 'Already have an account? Log In', 
+      mode: 'login' as AuthMode,
+      icon: <UserPlus className="w-6 h-6" /> 
+    },
+    forgot: { 
+      title: 'Reset Password', 
+      button: 'Send Link', 
+      toggle: 'Back to Log In', 
+      mode: 'login' as AuthMode,
+      icon: <KeyRound className="w-6 h-6" /> 
+    }
   };
 
   return (
-    <div className="min-h-screen relative flex flex-col items-center justify-center p-6 md:p-12 overflow-hidden bg-[#0c0c0e] font-['Inter']">
-     
-      <div className="w-full max-w-5xl relative z-10 flex flex-col md:flex-row gap-12 md:gap-24 items-center">
-        
-        {/* Cinematic Branding */}
-        <div className="max-w-md space-y-6 text-center md:text-left animate-fade-in">
-          <div className="flex items-center gap-3 justify-center md:justify-start">
-            <div className="w-10 h-10 bg-primary flex items-center justify-center">
-               <BarChart3 className="w-5 h-5 text-black" />
-            </div>
-            <span className="heading-athletic text-3xl text-white tracking-widest">GYM ZONE</span>
+    <div className="min-h-screen relative flex items-center justify-center overflow-hidden font-['Inter']">
+      {/* Background Image with Overlay */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-1000 scale-105"
+        style={{ backgroundImage: 'url("/auth-bg.png")' }}
+      />
+      <div className="absolute inset-0 z-10 bg-black/60 backdrop-blur-[2px]" />
+      
+      {/* Top Logo (Similar to JEFIT) */}
+      <div className="absolute top-8 z-20 flex flex-col items-center">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-primary flex items-center justify-center rounded-sm">
+            <div className="w-4 h-1 bg-black rotate-90 translate-x-1" />
+            <div className="w-3 h-1 bg-black rotate-90 -translate-x-1" />
           </div>
-
-          <div className="space-y-2">
-            <h1 className="heading-athletic text-[80px] md:text-[120px] leading-[0.85] text-white tracking-tighter">
-              GO<br/>HARD.
-            </h1>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">ELITE WORKOUT TERMINAL</p>
-          </div>
-        </div>
-
-        {/* Minimal Auth Card */}
-        <div className="w-full max-w-xs performance-card p-0.5 animate-slide-up">
-           <div className="bg-surface p-8 space-y-6">
-              <div className="space-y-3">
-                <div className="flex items-center gap-2 text-primary">
-                  {labels[mode].icon}
-                  <h2 className="heading-athletic text-3xl text-white">{labels[mode].title}</h2>
-                </div>
-                <div className="h-0.5 w-12 bg-primary" />
-                <p className="text-[9px] font-medium text-white/20 leading-relaxed uppercase tracking-widest">
-                  Secure access to the workout vault.
-                </p>
-              </div>
-
-              <form onSubmit={handleEmailAuth} className="space-y-4">
-                <div className="space-y-1">
-                  <div className="relative group">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/20 group-focus-within:text-primary transition-colors" />
-                    <input 
-                      type="email"
-                      placeholder="Email Address"
-                      required
-                      className="w-full bg-[#0a0b0d] border-b border-white/5 px-10 py-3 text-xs text-white outline-none focus:border-primary transition-all font-bold placeholder:text-white/10"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                {mode !== 'forgot' && (
-                  <div className="space-y-1">
-                    <div className="relative group">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-white/20 group-focus-within:text-primary transition-colors" />
-                      <input 
-                        type="password"
-                        placeholder="Security Key"
-                        required
-                        className="w-full bg-[#0a0b0d] border-b border-white/5 px-10 py-3 text-xs text-white outline-none focus:border-primary transition-all font-bold placeholder:text-white/10"
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <button 
-                  type="submit"
-                  disabled={loading}
-                  className="btn-blaze w-full py-4 text-[10px]"
-                >
-                  {loading ? 'PROCESSING...' : labels[mode].button}
-                </button>
-
-                {mode === 'login' && (
-                  <button 
-                    type="button"
-                    onClick={() => setMode('forgot')}
-                    className="w-full text-[8px] font-black uppercase tracking-widest text-white/20 hover:text-primary transition-colors mt-2"
-                  >
-                    Recover Password
-                  </button>
-                )}
-              </form>
-
-              <div className="relative">
-                <div className="absolute inset-x-0 top-1/2 h-px bg-white/5" />
-                <span className="relative z-10 block w-max mx-auto px-4 bg-surface text-[7px] font-black text-white/10 uppercase tracking-widest">
-                  OR_AUTH_WITH
-                </span>
-              </div>
-
-              <button 
-                onClick={handleGoogleSignIn}
-                disabled={loading}
-                className="w-full py-3 bg-white/5 border border-white/5 text-[9px] font-black uppercase tracking-[0.2em] text-white/60 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center gap-2"
-              >
-                GOOGLE_SYNC
-              </button>
-
-              <div className="flex flex-col gap-3">
-                <button 
-                  onClick={() => setMode(mode === 'login' ? 'register' : 'login')}
-                  className="text-[9px] font-black uppercase tracking-widest text-primary/60 hover:text-primary transition-colors"
-                >
-                  [ {labels[mode].link} ]
-                </button>
-              </div>
-
-              {error && (
-                <div className="p-4 bg-primary/5 border-l-2 border-primary">
-                  <p className="text-[8px] font-black text-primary uppercase tracking-widest leading-relaxed">Error: {error}</p>
-                </div>
-              )}
-
-              {message && (
-                <div className="p-4 bg-green-500/5 border-l-2 border-green-500">
-                  <p className="text-[8px] font-black text-green-500 uppercase tracking-widest leading-relaxed">{message}</p>
-                </div>
-              )}
-
-              <div className="flex items-center gap-2 opacity-10">
-                 <Zap className="w-3 h-3" />
-                 <span className="text-[7px] font-black uppercase tracking-widest">Secure Cloud Vault</span>
-              </div>
-           </div>
+          <span className="heading-athletic text-2xl text-white tracking-[0.2em]">GYM ZONE</span>
         </div>
       </div>
 
-      {/* Social Links Footer */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-6 opacity-30 hover:opacity-100 transition-opacity z-20">
-         <a href="https://github.com/skyness69" target="_blank" rel="noreferrer" className="text-[10px] font-black uppercase tracking-widest text-white hover:text-primary transition-colors">
-            [ GITHUB ]
-         </a>
-         <a href="https://www.instagram.com/49.4y/" target="_blank" rel="noreferrer" className="text-[10px] font-black uppercase tracking-widest text-white hover:text-primary transition-colors">
-            [ INSTAGRAM ]
-         </a>
+      {/* Centered Auth Card */}
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+        className="relative z-20 w-full max-w-[420px] mx-4"
+      >
+        <div className="bg-[#161618]/90 backdrop-blur-xl border border-white/10 rounded-2xl p-10 shadow-2xl space-y-8">
+          
+          <div className="text-center space-y-2">
+            <h2 className="text-4xl font-black text-white tracking-tight">{labels[mode].title}</h2>
+          </div>
+
+          <form onSubmit={handleEmailAuth} className="space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 ml-1">Email Address</label>
+                <div className="relative group">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-primary transition-colors" />
+                  <input 
+                    type="email"
+                    required
+                    className="w-full bg-black/40 border border-white/5 rounded-xl px-12 py-4 text-sm text-white outline-none focus:border-primary focus:bg-black/60 transition-all font-medium placeholder:text-white/5"
+                    placeholder="name@example.com"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {mode !== 'forgot' && (
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between px-1">
+                    <label className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Security Key</label>
+                    {mode === 'login' && (
+                      <button 
+                        type="button"
+                        onClick={() => setMode('forgot')}
+                        className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary transition-colors"
+                      >
+                        Forgot?
+                      </button>
+                    )}
+                  </div>
+                  <div className="relative group">
+                    <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-primary transition-colors" />
+                    <input 
+                      type="password"
+                      required
+                      className="w-full bg-black/40 border border-white/5 rounded-xl px-12 py-4 text-sm text-white outline-none focus:border-primary focus:bg-black/60 transition-all font-medium placeholder:text-white/5"
+                      placeholder="••••••••"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <button 
+              type="submit"
+              disabled={loading}
+              className="w-full bg-primary hover:bg-white text-black font-black uppercase tracking-[0.2em] py-4 rounded-xl transition-all duration-300 shadow-lg shadow-primary/10 flex items-center justify-center gap-2 text-xs"
+            >
+              {loading ? 'PROCESSING...' : labels[mode].button}
+            </button>
+
+            <button 
+              type="button"
+              onClick={() => {
+                setMode(labels[mode].mode);
+                setError('');
+                setMessage('');
+              }}
+              className="w-full text-center text-xs font-bold text-white/40 hover:text-white transition-colors"
+            >
+              {labels[mode].toggle}
+            </button>
+          </form>
+
+          <div className="relative">
+            <div className="absolute inset-x-0 top-1/2 h-px bg-white/5" />
+            <span className="relative z-10 block w-max mx-auto px-4 bg-[#161618] text-[9px] font-black text-white/10 uppercase tracking-[0.3em]">
+              Or continue with
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            <button 
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+              className="w-full py-3.5 bg-white text-black rounded-xl font-bold text-xs flex items-center justify-center gap-3 hover:bg-white/90 transition-all shadow-md"
+            >
+              <Chrome className="w-4 h-4" />
+              Sign in with Google
+            </button>
+            
+            <div className="grid grid-cols-2 gap-3">
+              <button 
+                disabled={true}
+                className="py-3.5 bg-white text-black rounded-xl font-bold text-xs flex items-center justify-center gap-3 opacity-80 cursor-not-allowed"
+              >
+                <Apple className="w-4 h-4 fill-black" />
+                Apple
+              </button>
+              <button 
+                disabled={true}
+                className="py-3.5 bg-[#1877F2] text-white rounded-xl font-bold text-xs flex items-center justify-center gap-3 opacity-80 cursor-not-allowed"
+              >
+                <Facebook className="w-4 h-4 fill-white" />
+                Facebook
+              </button>
+            </div>
+          </div>
+
+          <AnimatePresence mode="wait">
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+                  <p className="text-[10px] font-bold text-red-400 uppercase tracking-widest text-center">{error}</p>
+                </div>
+              </motion.div>
+            )}
+
+            {message && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="p-4 bg-primary/10 border border-primary/20 rounded-xl">
+                  <p className="text-[10px] font-bold text-primary uppercase tracking-widest text-center">{message}</p>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+
+      {/* Footer Branding */}
+      <div className="absolute bottom-8 z-20 text-[10px] font-black uppercase tracking-[0.4em] text-white/20">
+        Elite Workout Terminal v1.0
       </div>
     </div>
   );
 };
 
 export default Auth;
+
 
